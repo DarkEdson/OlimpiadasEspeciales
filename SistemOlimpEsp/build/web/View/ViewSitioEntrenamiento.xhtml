@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>OE</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="X-UA-Conpatible" content="IE=edge" />
+
+    </h:head>
+    <h:body>
+      <ui:composition template="./View/Main.xhtml">
+
+            <ui:define name="content">
+         <p:growl id="growl" showDetail="true" sticky="true" />
+        <p:panel  header="Sitio entrenamiento"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+
+            <h:form styleClass="form-horizontal">
+
+
+                <h:panelGrid columns="2" cellpadding="1" >
+            
+                    <p:spacer />
+
+                    <h:outputLabel for="descripcion" value=" " />
+                    <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                 	<p:spacer />	<p:spacer />	
+                    <f:facet name="footer">
+                         <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
+                            <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
+                            <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
+                            <p:separator />
+                        </p:splitButton>   
+                    </f:facet> 
+                </h:panelGrid>
+                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+
+            </h:form>
+
+
+            <p:dataTable var="sitioEntrenamiento" value="#{beanSitioEntrenamiento.sitioEntrenamiento}"  rows="2" paginator="false">
+                <p:column headerText="Id">
+                    <h:outputText value="#{sitioEntrenamiento.idSitioEntrenamiento}" />
+                </p:column>
+
+                <p:column headerText="Descripcion">
+                    <h:outputText value="#{sitioEntrenamiento.sitioEntrenamiento}" />
+                </p:column>
+            </p:dataTable>
+
+        </p:panel>
+         </ui:define>
+
+        </ui:composition>
+    </h:body>
+
+    <style type="text/css">
+        .ui-priority-primary{
+            background:#2980B9;
+            color: #fff;
+        }
+        .ui-panel-titlebar, ui-button-text ui-c{
+            background:#2980B9;
+            color: #fff;
+        }
+    </style>
+</html>
+

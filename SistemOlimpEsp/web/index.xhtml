@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Olimpiadas Especiales</title>
+    </h:head>
+    <h:body>
+        <p:growl id="growl" showDetail="true" sticky="true" />  
+        <h:form styleClass="form-horizontal">
+
+            <p:panel styleClass="encabezado_login" header="Login"  style="height:300px; width: 400px; margin-left: 40%; margin-top: 10%;">
+
+                <h:panelGrid columns="2" cellpadding="5" >
+                    <p:spacer /><p:spacer />	
+
+                    <h:outputLabel for="nombre" value=" " />
+                    <p:inputText placeholder="Usuario" id="nombre" value="#{beanLogin.name}" required="true" label="username" autocomplete="off" styleClass="form-control"/>
+
+
+                    <h:outputLabel for="password" value=" " />
+                    <p:password placeholder="Contraseña" id="password" value="#{beanLogin.pass}" required="true" label="password" autocomplete="off" styleClass="form-control"/>
+
+
+                </h:panelGrid>
+                <p:spacer /><p:spacer />	
+                <f:facet name="footer">
+                    <p:commandButton value="Login" icon="fa fa-user" action="#{beanLogin.send()}" oncomplete="handleLoginRequest(xhr, status, args)" styleClass="ui-priority-primary"   ajax="false" style="margin-right:10px"/>
+
+                </f:facet> 
+            </p:panel>
+        </h:form>
+        <style type="text/css">
+            .ui-priority-primary{
+                background:#2980B9;
+                color: #fff;
+            }
+            .ui-panel-titlebar, ui-button-text ui-c{
+                background:#2980B9;
+                color: #fff;
+            }
+        </style>
+    </h:body>
+ 
+</html>
+

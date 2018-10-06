@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet name="css/default.css"/>
+        <h:outputStylesheet name="css/cssLayout.css"/>
+        <title>Olimpiadas Especiales</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top">
+            <ui:insert name="top">
+             <h:form>  
+                <p:growl id="messages"/>
+                <p:menubar>
+                    <p:submenu label="Inicio" icon="ui-icon-document">
+                        <p:menuitem value="Ir a Inicio" url="Main.xhtml" />
+                        <p:separator />
+                        <p:submenu label="Nueva" icon="ui-icon-contact">
+                            <p:menuitem value="Inscripcion" url="ViewUsuarios.xhtml" />
+                            <p:menuitem value="Asignacion" url="ViewUsuarios.xhtml" />
+                        </p:submenu>
+                        <p:separator />
+                        <p:menuitem value="Agregar Diagnostico" url="#" />
+                    </p:submenu>
+
+                    <p:submenu label="Reporteria" icon="ui-icon-pencil">
+                        <p:menuitem value="Reporte de Atletas" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                        <p:menuitem value="Reporte de Disciplinas" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                    </p:submenu>
+
+                    <p:submenu label="Mantenimiento" icon="ui-icon-gear">
+                        <p:submenu label="Atletas" icon="ui-icon-refresh">
+                            <p:menuitem value="Actualizar" url="#" icon="ui-icon-disk"/>
+                            <p:menuitem value="Borrar" url="#" icon="ui-icon-arrowrefresh-1-w"/>
+                        </p:submenu>
+                        <p:submenu label="Disciplinas" icon="ui-icon-newwin">
+                            <p:menuitem value="Agregar" url="#" icon="ui-icon-disk"/>
+                            <p:menuitem value="Actualizar" url="#" icon="ui-icon-disk"/>
+                            <p:menuitem value="Borrar" url="#" icon="ui-icon-arrowrefresh-1-w"/>
+                        </p:submenu>
+                    </p:submenu>
+                    
+                    <p:submenu label="Ayuda" icon="ui-icon-help">
+                        <p:menuitem value="Acerca De" url="#" />
+                        <p:submenu label="Buscar" icon="ui-icon-search">
+                            <p:menuitem value="Por Atletas" url="ViewInstitucion.xhtml" />
+                            <p:menuitem value="Por Disciplina" url="ViewDisciplinas.xhtml" />
+                        </p:submenu>
+                    </p:submenu>
+
+                    <p:menuitem value="Salir" url="../index.xhtml" icon="ui-icon-close" />
+
+                    <f:facet name="options">
+                        <p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />
+                    </f:facet>
+                </p:menubar>
+            </h:form>
+            </ui:insert>
+        </div>
+
+        <div id="content" class="center_content">
+            <ui:insert name="content">Content</ui:insert>
+        </div>
+
+        <div id="bottom">
+            <ui:insert name="bottom">
+                <center>
+                    <p:outputLabel value="Derechos Reservados @2018"/> 
+                </center>
+                <div id="rightb" style="position: relative; right: 0">
+                    <p:outputLabel value="Usuario:"/><p:outputLabel value="#{beanLogin.getName()}"/>
+                </div>
+            </ui:insert>
+        </div>
+
+    </h:body>
+
+</html>
