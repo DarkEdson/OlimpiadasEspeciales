@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <body>
+
+        <ui:composition template="./Main.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+                    <p:dataTable id="tbl" var="atleta" value="#{beanAtleta.atleta}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exportar}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+
+                        <f:facet name="{Exportar}">
+                            <h:commandLink>
+                                <p:graphicImage name="images/xls.png" width="24"/>
+                                <p:dataExporter type="xls" target="tbl" fileName="atletas" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="images/pdf.png" width="24"/>
+                                <p:dataExporter type="pdf" target="tbl" fileName="atletas"/>
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="images/csv.png" width="24"/>
+                                <p:dataExporter type="csv" target="tbl" fileName="atletas" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:graphicImage name="images/xml.png" width="24"/>
+                                <p:dataExporter type="xml" target="tbl" fileName="atletas" />
+                            </h:commandLink>
+                        </f:facet>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Codigo" />
+                            </f:facet>
+                            <h:outputText value="#{atleta.idAtleta}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Nombre"/>
+                            </f:facet>
+                            <h:outputText value="#{atleta.nombreAtleta}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Direccion" />
+                            </f:facet>
+                            <h:outputText value="#{atleta.domicilio}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Telefono" />
+                            </f:facet>
+                            <h:outputText value="#{atleta.telefono}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <h3>Export Page Data Only</h3>
+                    <h:commandLink>
+                        <p:graphicImage name="images/xls.png" />
+                        <p:dataExporter type="xls" target="tbl" fileName="Atletas" pageOnly="true"/>
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage name="images/pdf.png" />
+                        <p:dataExporter type="pdf" target="tbl" fileName="Atletas" pageOnly="true" />
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage name="images/csv.png" />
+                        <p:dataExporter type="csv" target="tbl" fileName="Atletas" pageOnly="true" />
+                    </h:commandLink>
+
+                    <h:commandLink>
+                        <p:graphicImage name="images/xml.png" />
+                        <p:dataExporter type="xml" target="tbl" fileName="Atletas" pageOnly="true" />
+                    </h:commandLink>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

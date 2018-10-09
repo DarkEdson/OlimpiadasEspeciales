@@ -32,7 +32,7 @@
                     </p:submenu>
 
                     <p:submenu label="Reporteria" icon="ui-icon-pencil">
-                        <p:menuitem value="Reporte de Atletas" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                        <p:menuitem value="Reporte de Atletas" url="ViewAtletasReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
                         <p:menuitem value="Reporte de Disciplinas" url="#" icon="ui-icon-arrowreturnthick-1-e" />
                     </p:submenu>
 
@@ -75,8 +75,9 @@
                 <center>
                     <p:outputLabel value="Derechos Reservados @2018"/> 
                 </center>
+                
                 <div id="rightb" style="position: relative; right: 0">
-                    <p:outputLabel value="Usuario:"/><p:outputLabel value="#{beanLogin.getName()}"/>
+                    <p:outputLabel value="Usuario:"/><p:outputLabel value="#{beanLogin.name}"/>
                 </div>
             </ui:insert>
         </div>

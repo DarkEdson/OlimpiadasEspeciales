@@ -13,9 +13,11 @@ import javax.servlet.http.HttpSession;
 import Util.Util;
 import java.io.IOException;
 import java.io.Serializable;
+//import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 
 @ManagedBean
+//@SessionScoped
 public class BeanLogin implements Serializable {
 
     private static final long serialVersionUID = 9059286805603267070L;
