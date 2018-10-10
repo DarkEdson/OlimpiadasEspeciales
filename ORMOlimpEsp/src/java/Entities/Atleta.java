@@ -6,7 +6,9 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,9 +22,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -108,6 +112,8 @@ public class Atleta implements Serializable {
     private Estado idEstado;
     @OneToMany(mappedBy = "idAtleta")
     private List<AtletaDisciplina> atletaDisciplinaList;
+    @Transient
+    private int edad;
 
     public Atleta() {
     }
@@ -273,7 +279,32 @@ public class Atleta implements Serializable {
     public void setAtletaDisciplinaList(List<AtletaDisciplina> atletaDisciplinaList) {
         this.atletaDisciplinaList = atletaDisciplinaList;
     }
-
+    
+    @PostLoad
+    public void calcularEdad() {
+		Calendar cumple = new GregorianCalendar();
+		Calendar ahora = new GregorianCalendar();
+		cumple.setTime(fechaNacimiento);
+		ahora.setTime(new Date()); // Comprobar que la fecha de nacimiento sea
+									// anterior a la actual
+		if (ahora.compareTo(cumple) < 0) { // Si no es anterior poner la edad a
+											// 0
+			edad = 0;
+		} else {
+			int ajuste = (ahora.get(Calendar.DAY_OF_YEAR)
+					- cumple.get(Calendar.DAY_OF_YEAR) < 0) ? -1 : 0;
+			edad = ahora.get(Calendar.YEAR) - cumple.get(Calendar.YEAR)
+					+ ajuste;
+		}
+	}
+    
+	public int getEdad() {
+		return edad;
+	}
+ 
+	public void setEdad(int edad) {
+		this.edad = edad;
+	}
     @Override
     public int hashCode() {
         int hash = 0;

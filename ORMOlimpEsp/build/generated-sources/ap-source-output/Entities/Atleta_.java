@@ -13,7 +13,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-10-05T14:25:30")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2018-10-08T22:35:50")
 @StaticMetamodel(Atleta.class)
 public class Atleta_ { 
 

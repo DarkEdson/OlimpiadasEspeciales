@@ -12,10 +12,13 @@
 
             <ui:define name="content">
                 <h:form>
+                    <center>
+                    <h2> <h:outputLabel style=" text-align: center" value="Listado de Atletas"/></h2>
+                    </center>
                     <p:dataTable id="tbl" var="atleta" value="#{beanAtleta.atleta}"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exportar}"
                                  paginator="true" rows="10" style="margin-bottom:20px">
-
+                        
                         <f:facet name="{Exportar}">
                             <h:commandLink>
                                 <p:graphicImage name="images/xls.png" width="24"/>
@@ -47,7 +50,7 @@
 
                         <p:column>
                             <f:facet name="header">
-                                <h:outputText value="Nombre"/>
+                                <h:outputText value="Nombre Atleta"/>
                             </f:facet>
                             <h:outputText value="#{atleta.nombreAtleta}" />
                         </p:column>
@@ -64,6 +67,12 @@
                                 <h:outputText value="Telefono" />
                             </f:facet>
                             <h:outputText value="#{atleta.telefono}" />
+                        </p:column>
+                         <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Edad" />
+                            </f:facet>
+                             <h:outputText value="#{atleta.edad}" />
                         </p:column>
                     </p:dataTable>
 
