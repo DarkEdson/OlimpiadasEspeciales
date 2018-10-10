@@ -1,16 +1,16 @@
 
 #top {
     position: relative;
-    background-color: #036fab;
-    color: indigo ;
+     background:#ffffffcc;
+            color: #4f4f4f;
     padding: 5px;
     margin: 0px 0px 10px 0px;
 }
 
 #bottom {
     clear: both;
-    background: indigo;
-    color: white;
+     background:#ffffffcc;
+            color: #4f4f4f;
     font-size: 1em;
     height: 50px;
     text-align: center;
@@ -35,7 +35,7 @@
 
 .center_content {
     position: relative;
-    background-color: #dddddd;
+    background-color: #ffffffcc;
     padding: 5px;
 }
 
