@@ -13,47 +13,75 @@
 
     </h:head>
     <h:body>
-      <ui:composition template="Main.xhtml">
+        <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
-         <p:growl id="growl" showDetail="true" sticky="true" />
-        <p:panel  header="Roles"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+                <p:messages id="mensaje" showDetail="true" autoUpdate="true" 
+                            closable="true" globalOnly="true"/>
+                <p:growl id="msgs" showDetail="true" />
+                <p:panel  header="Roles"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
-            <h:form styleClass="form-horizontal">
-
-
-                <h:panelGrid columns="2" cellpadding="1" >
-            
-                    <p:spacer />
-
-                    <h:outputLabel for="descripcion" value=" " />
-                    <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
-                 	<p:spacer />	<p:spacer />	
-                    <f:facet name="footer">
-                         <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
-                            <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
-                            <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
-                            <p:separator />
-                        </p:splitButton>   
-                    </f:facet> 
-                </h:panelGrid>
-                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
-
-            </h:form>
+                    <h:form styleClass="form-horizontal">
 
 
-            <p:dataTable var="roles" value="#{beanRoles.roles}"  rows="2" paginator="false">
-                <p:column headerText="Id">
-                    <h:outputText value="#{roles.idRol}" />
-                </p:column>
+                        <h:panelGrid columns="2" cellpadding="1">
 
-                <p:column headerText="Descripcion">
-                    <h:outputText value="#{roles.rol}" />
-                </p:column>
-            </p:dataTable>
+                            <p:spacer /><p:spacer />
 
-        </p:panel>
-         </ui:define>
+                            <h:outputLabel for="descripcion" value=" " />
+                            <p:inputText placeholder="Descripcion" id="descripcion" value="#{beanRoles.descripcion}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                            <p:spacer /><p:spacer /><p:spacer />
+                            <h:selectOneMenu value="#{beanRoles.estado}" >
+                                <f:selectItems value="#{beanRoles.listEstado}" var="estados" itemLabel="#{estados.estado}"  itemValue="#{estados.idEstado}" />
+                            </h:selectOneMenu>   
+
+                            <p:spacer /><p:spacer /><p:spacer />	
+                            <f:facet name="footer">
+                                <p:splitButton id="save" value="Guardar" actionListener="#{beanRoles.setInsert()}" ajax="false" icon="ui-icon-disk">
+                                    <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
+                                    <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
+                                    <p:separator />
+                                </p:splitButton>   
+                            </f:facet> 
+                        </h:panelGrid>
+                        <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+
+
+                        </h:form>
+                        <h:form styleClass="form-horizontal" id="form">
+                        <p:dataTable id="basicDT" var="roles" value="#{beanRoles.roles}"  paginator="true" rows="5">
+                            <p:column headerText="Id">
+                                <h:outputText value="#{roles.idRol}" />
+                            </p:column>
+
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{roles.rol}" />
+                            </p:column>
+
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{roles.idEstado.estado}" />
+                            </p:column>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":form:carDetail"  oncomplete="PF('carDialog').show()" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{roles}" target="#{beanRoles.selectedRoles}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+
+                        <p:dialog header="Selected Cars" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="220">
+                            <p:outputPanel id="carDetail" style="text-align:center;">
+                                <h:outputText value="#{beanRoles.selectedRoles.idRol} - #{beanRoles.selectedRoles.rol}" style="display:block"/>
+                            </p:outputPanel>
+                        </p:dialog>
+
+                    </h:form>
+
+
+                </p:panel>
+            </ui:define>
 
         </ui:composition>
     </h:body>

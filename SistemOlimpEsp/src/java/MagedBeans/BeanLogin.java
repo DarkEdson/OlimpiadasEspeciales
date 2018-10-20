@@ -13,11 +13,9 @@ import javax.servlet.http.HttpSession;
 import Util.Util;
 import java.io.IOException;
 import java.io.Serializable;
-//import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 
 @ManagedBean
-//@SessionScoped
 public class BeanLogin implements Serializable {
 
     private static final long serialVersionUID = 9059286805603267070L;
@@ -25,6 +23,8 @@ public class BeanLogin implements Serializable {
     boolean result;
     private String nombre;
     private String password;
+    private String resultset;
+    private String rol;
     String url = "./View/Main.xhtml";
     FacesContext fc = FacesContext.getCurrentInstance();
     ExternalContext ec = fc.getExternalContext();
@@ -47,17 +47,18 @@ public class BeanLogin implements Serializable {
     }
 
     public void send() throws IOException {
-
-        result = ControlUsuario.getLogin(nombre, password);
-
-        if (result) {
+         resultset="";
+        resultset = ControlUsuario.getLogin(nombre, password);
+        
+        if (!resultset.equals("")) {
+            String[] parts =resultset.split(",");
             // get Http Session and store username
             HttpSession session = Util.getSession();
-            session.setAttribute("username", nombre);
-            /*FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Login correcto!",
+            session.setAttribute("userName", parts[0]);
+            session.setAttribute("userRol", parts[1]);
+           /* FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, (String) session.getAttribute("userName")+"/"+(String) session.getAttribute("userRol"),
                     "Bienvenido!"));*/
-            ec.redirect(url);
+          ec.redirect(url);
         } else {
             logout();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,

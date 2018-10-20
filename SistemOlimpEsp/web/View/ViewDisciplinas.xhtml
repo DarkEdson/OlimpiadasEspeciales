@@ -13,48 +13,51 @@
 
     </h:head>
     <h:body>
-       <ui:composition template="Main.xhtml">
+        <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
-         <p:growl id="growl" showDetail="true" sticky="true" />
-        <p:panel  header="Disciplinas"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+                <p:growl id="growl" showDetail="true" sticky="true" />
+                <p:panel  header="Disciplinas"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
-            <h:form styleClass="form-horizontal">
-
-
-                <h:panelGrid columns="2" cellpadding="1" >
-            
-                    <p:spacer />
-
-                    <h:outputLabel for="descripcion" value=" " />
-                    <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
-                 	<p:spacer />	<p:spacer />	
-                    <f:facet name="footer">
-                         <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
-                            <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
-                            <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
-                            <p:separator />
-                        </p:splitButton>   
-                    </f:facet> 
-                </h:panelGrid>
-                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
-
-            </h:form>
+                    <h:form styleClass="form-horizontal">
 
 
-            <p:dataTable var="disciplinas" value="#{beanDisciplinas.disciplinas}"  rows="2" paginator="false">
-                <p:column headerText="Id">
-                    <h:outputText value="#{disciplinas.idDisciplina}" />
-                </p:column>
+                        <h:panelGrid columns="2" cellpadding="1" >
 
-                <p:column headerText="Descripcion">
-                    <h:outputText value="#{disciplinas.nombreDisciplina}" />
-                </p:column>
-            </p:dataTable>
+                            <p:spacer />
+                            <h:outputLabel for="codigo" value=" " />
+                            <p:inputText placeholder="Codigo" id="codigo" value="" required="true" label="codigo" autocomplete="off" styleClass="form-control"/>
+                            <p:spacer />
 
-        </p:panel>
-                         
-     
+                            <h:outputLabel for="descripcion" value=" " />
+                            <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                            <p:spacer />	<p:spacer />	
+                            <f:facet name="footer">
+                                <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
+                                    <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
+                                    <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
+                                    <p:separator />
+                                </p:splitButton>   
+                            </f:facet> 
+                        </h:panelGrid>
+                        <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+
+                    </h:form>
+
+
+                    <p:dataTable var="disciplinas" value="#{beanDisciplinas.disciplinas}"  paginator="false">
+                        <p:column headerText="Id">
+                            <h:outputText value="#{disciplinas.idDisciplina}" />
+                        </p:column>
+
+                        <p:column headerText="Descripcion">
+                            <h:outputText value="#{disciplinas.nombreDisciplina}" />
+                        </p:column>
+                    </p:dataTable>
+
+                </p:panel>
+
+
             </ui:define>
 
         </ui:composition>

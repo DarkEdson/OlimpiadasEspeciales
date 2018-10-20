@@ -21,9 +21,9 @@ import javax.faces.bean.ViewScoped;
  */
 //@Named(value = "beanInsertRoles")
 //@RequestScoped
-@ManagedBean(name="beanRoles")
+@ManagedBean(name="beanInsertRoles")
 @ViewScoped
-public class BeanRoles implements Serializable{
+public class BeanInsertRoles implements Serializable{
 
     private static final long serialVersionUID = 7617362545974960572L;
 
@@ -41,7 +41,7 @@ public class BeanRoles implements Serializable{
      * Creates a new instance of BeanInsertRoles
      */
      @PostConstruct
-    public void initBeanRoles() {
+    public void initBeanInsertRoles() {
         this.controlCrud = new ControllerCrud();//REFERENCIA AL CONTROLLER ESTANDAR PARA EL CRUD
          this.ControlTabla = new RolesJpaController();//REFERENCIA PARA EL CONTENIDO DE LA DATATABLE
         this.ControlForeingKey = new EstadoJpaController();//REFERENCIA PARA EL CONTENIDO DEL COMBOBOX
@@ -58,23 +58,12 @@ public class BeanRoles implements Serializable{
      
     /*GETTER AND SETTER DEL CONTENIDO DE LA FILA SELECCIONADA*/
       public Roles getSelectedRoles() {
-         if(selectedRoles != null) {
-             llenaForm();
-        }
         return selectedRoles;
     }
  
     public void setSelectedRoles(Roles selectedRoles) {
         this.selectedRoles = selectedRoles;
     }
-    
-/***LLENADO DEL FORMULARIO CON EL CONTENIDO SELECCIONADO DE LA FILA***/  
-    public void llenaForm(){
-        this.descripcion=selectedRoles.getRol();
-        
-        System.out.println(this.descripcion);
-    }
-    
     
     
     
@@ -92,11 +81,6 @@ public class BeanRoles implements Serializable{
         controlCrud.begin();
         controlCrud.insert(r);
         controlCrud.close();
-        formClear();
-    }
-    /**LIMPIA CONTENIDO DEL FORMULARIO**/
-    public void formClear(){
-        this.descripcion="";
     }
      /*GETTER AND SETTER PARA EL CONTENIDO DEL FORMULARIO*/
     public String getDescripcion() {

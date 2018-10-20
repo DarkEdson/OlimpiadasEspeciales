@@ -13,11 +13,14 @@
 
     </h:head>
     <h:body>
-      <ui:composition template="Main.xhtml">
+               <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
+                
+
+
          <p:growl id="growl" showDetail="true" sticky="true" />
-        <p:panel  header="Institucion"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+        <p:panel  header="Programas"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
             <h:form styleClass="form-horizontal">
 
@@ -42,30 +45,39 @@
             </h:form>
 
 
-            <p:dataTable var="institucion" value="#{beanInstitucion.institucion}"  paginator="false">
+            <p:dataTable var="programas" value="#{beanProgramas.programas}"   paginator="false">
                 <p:column headerText="Id">
-                    <h:outputText value="#{institucion.idIntitucion}" />
+                    <h:outputText value="#{programas.idPrograma}" />
                 </p:column>
 
                 <p:column headerText="Descripcion">
-                    <h:outputText value="#{institucion.nombreInstitucion}" />
+                    <h:outputText value="#{programas.programa}" />
                 </p:column>
             </p:dataTable>
 
         </p:panel>
-                  </ui:define>
+         
+                     </ui:define>
 
         </ui:composition>
     </h:body>
 
     <style type="text/css">
+        .ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all{
+             background:#2980B9 !important;
+            color: #fff !important;
+        }
         .ui-priority-primary{
-            background:#2980B9;
-            color: #fff;
+            background:#2980B9 !important;
+            color: #fff !important;
         }
         .ui-panel-titlebar, ui-button-text ui-c{
-            background:#2980B9;
-            color: #fff;
+            background:#2980B9 !important;
+            color: #fff !important;;
+        }
+        .ui-widget-header {
+             background:#2980B9 !important;
+            color: #fff !important;
         }
     </style>
 </html>
