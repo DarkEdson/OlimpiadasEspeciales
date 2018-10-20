@@ -13,14 +13,11 @@ import java.security.NoSuchAlgorithmException;
 /**
  *
  * @author axel.medina
- * @author edson.aju
- * @since descripción Clase utilizada para manejar la encriptacion de las contraseñas
  */
 public class getMD5 implements Serializable{
 
     private static final long serialVersionUID = 2023713583332762025L;
 
-    /* <p> Metodo que recibe la contraseña obtiene la instancia MD5 y devuelve la secuencia encriptada <p>*/
     public static String getMD5(String input) {
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");

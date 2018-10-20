@@ -17,9 +17,15 @@ import Entities.Roles;
 import Entities.Usuarios;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 /**
@@ -28,14 +34,51 @@ import javax.transaction.UserTransaction;
  */
 public class RolesJpaController implements Serializable {
 
-    private static final long serialVersionUID = -8686764258276416272L;
-
-    public RolesJpaController() {
-        this.utx = utx;
-        this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
-    }
-    private UserTransaction utx = null;
+    private static final long serialVersionUID = 6808130639337818802L;
+ @Resource
+    private UserTransaction utx=null;
     private EntityManagerFactory emf = null;
+    public RolesJpaController() {
+        this.utx = new UserTransaction() {
+            @Override
+            public void begin() throws NotSupportedException, SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void rollback() throws IllegalStateException, SecurityException, SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void setRollbackOnly() throws IllegalStateException, SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public int getStatus() throws SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void setTransactionTimeout(int seconds) throws SystemException {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+       // this.utx = utx;
+       // this.utx= (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+        this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
+        //    EntityManager em = emf.createEntityManager();
+	//this.utx = em.getTransaction();
+    }
+    //private UserTransaction utx = null;
+     //private EntityTransaction utx = null;
+   
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
@@ -47,6 +90,7 @@ public class RolesJpaController implements Serializable {
         }
         EntityManager em = null;
         try {
+            
             utx.begin();
             em = getEntityManager();
             Estado idEstado = roles.getIdEstado();

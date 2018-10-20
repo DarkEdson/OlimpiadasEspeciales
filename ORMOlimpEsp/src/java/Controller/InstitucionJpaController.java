@@ -13,7 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entities.Estado;
-import Entities.AtletaDisciplina;
+import Entities.Atleta;
 import Entities.Institucion;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +28,6 @@ import javax.transaction.UserTransaction;
  */
 public class InstitucionJpaController implements Serializable {
 
-    private static final long serialVersionUID = 5319174313422851404L;
-
     public InstitucionJpaController() {
         this.utx = utx;
         this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
@@ -42,8 +40,8 @@ public class InstitucionJpaController implements Serializable {
     }
 
     public void create(Institucion institucion) throws RollbackFailureException, Exception {
-        if (institucion.getAtletaDisciplinaList() == null) {
-            institucion.setAtletaDisciplinaList(new ArrayList<AtletaDisciplina>());
+        if (institucion.getAtletaList() == null) {
+            institucion.setAtletaList(new ArrayList<Atleta>());
         }
         EntityManager em = null;
         try {
@@ -54,24 +52,24 @@ public class InstitucionJpaController implements Serializable {
                 idEstado = em.getReference(idEstado.getClass(), idEstado.getIdEstado());
                 institucion.setIdEstado(idEstado);
             }
-            List<AtletaDisciplina> attachedAtletaDisciplinaList = new ArrayList<AtletaDisciplina>();
-            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplinaToAttach : institucion.getAtletaDisciplinaList()) {
-                atletaDisciplinaListAtletaDisciplinaToAttach = em.getReference(atletaDisciplinaListAtletaDisciplinaToAttach.getClass(), atletaDisciplinaListAtletaDisciplinaToAttach.getIdAtletaDisciplina());
-                attachedAtletaDisciplinaList.add(atletaDisciplinaListAtletaDisciplinaToAttach);
+            List<Atleta> attachedAtletaList = new ArrayList<Atleta>();
+            for (Atleta atletaListAtletaToAttach : institucion.getAtletaList()) {
+                atletaListAtletaToAttach = em.getReference(atletaListAtletaToAttach.getClass(), atletaListAtletaToAttach.getIdAtleta());
+                attachedAtletaList.add(atletaListAtletaToAttach);
             }
-            institucion.setAtletaDisciplinaList(attachedAtletaDisciplinaList);
+            institucion.setAtletaList(attachedAtletaList);
             em.persist(institucion);
             if (idEstado != null) {
                 idEstado.getInstitucionList().add(institucion);
                 idEstado = em.merge(idEstado);
             }
-            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : institucion.getAtletaDisciplinaList()) {
-                Institucion oldIdIntitucionOfAtletaDisciplinaListAtletaDisciplina = atletaDisciplinaListAtletaDisciplina.getIdIntitucion();
-                atletaDisciplinaListAtletaDisciplina.setIdIntitucion(institucion);
-                atletaDisciplinaListAtletaDisciplina = em.merge(atletaDisciplinaListAtletaDisciplina);
-                if (oldIdIntitucionOfAtletaDisciplinaListAtletaDisciplina != null) {
-                    oldIdIntitucionOfAtletaDisciplinaListAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListAtletaDisciplina);
-                    oldIdIntitucionOfAtletaDisciplinaListAtletaDisciplina = em.merge(oldIdIntitucionOfAtletaDisciplinaListAtletaDisciplina);
+            for (Atleta atletaListAtleta : institucion.getAtletaList()) {
+                Institucion oldIdInstitucionOfAtletaListAtleta = atletaListAtleta.getIdInstitucion();
+                atletaListAtleta.setIdInstitucion(institucion);
+                atletaListAtleta = em.merge(atletaListAtleta);
+                if (oldIdInstitucionOfAtletaListAtleta != null) {
+                    oldIdInstitucionOfAtletaListAtleta.getAtletaList().remove(atletaListAtleta);
+                    oldIdInstitucionOfAtletaListAtleta = em.merge(oldIdInstitucionOfAtletaListAtleta);
                 }
             }
             utx.commit();
@@ -94,22 +92,22 @@ public class InstitucionJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Institucion persistentInstitucion = em.find(Institucion.class, institucion.getIdIntitucion());
+            Institucion persistentInstitucion = em.find(Institucion.class, institucion.getIdInstitucion());
             Estado idEstadoOld = persistentInstitucion.getIdEstado();
             Estado idEstadoNew = institucion.getIdEstado();
-            List<AtletaDisciplina> atletaDisciplinaListOld = persistentInstitucion.getAtletaDisciplinaList();
-            List<AtletaDisciplina> atletaDisciplinaListNew = institucion.getAtletaDisciplinaList();
+            List<Atleta> atletaListOld = persistentInstitucion.getAtletaList();
+            List<Atleta> atletaListNew = institucion.getAtletaList();
             if (idEstadoNew != null) {
                 idEstadoNew = em.getReference(idEstadoNew.getClass(), idEstadoNew.getIdEstado());
                 institucion.setIdEstado(idEstadoNew);
             }
-            List<AtletaDisciplina> attachedAtletaDisciplinaListNew = new ArrayList<AtletaDisciplina>();
-            for (AtletaDisciplina atletaDisciplinaListNewAtletaDisciplinaToAttach : atletaDisciplinaListNew) {
-                atletaDisciplinaListNewAtletaDisciplinaToAttach = em.getReference(atletaDisciplinaListNewAtletaDisciplinaToAttach.getClass(), atletaDisciplinaListNewAtletaDisciplinaToAttach.getIdAtletaDisciplina());
-                attachedAtletaDisciplinaListNew.add(atletaDisciplinaListNewAtletaDisciplinaToAttach);
+            List<Atleta> attachedAtletaListNew = new ArrayList<Atleta>();
+            for (Atleta atletaListNewAtletaToAttach : atletaListNew) {
+                atletaListNewAtletaToAttach = em.getReference(atletaListNewAtletaToAttach.getClass(), atletaListNewAtletaToAttach.getIdAtleta());
+                attachedAtletaListNew.add(atletaListNewAtletaToAttach);
             }
-            atletaDisciplinaListNew = attachedAtletaDisciplinaListNew;
-            institucion.setAtletaDisciplinaList(atletaDisciplinaListNew);
+            atletaListNew = attachedAtletaListNew;
+            institucion.setAtletaList(atletaListNew);
             institucion = em.merge(institucion);
             if (idEstadoOld != null && !idEstadoOld.equals(idEstadoNew)) {
                 idEstadoOld.getInstitucionList().remove(institucion);
@@ -119,20 +117,20 @@ public class InstitucionJpaController implements Serializable {
                 idEstadoNew.getInstitucionList().add(institucion);
                 idEstadoNew = em.merge(idEstadoNew);
             }
-            for (AtletaDisciplina atletaDisciplinaListOldAtletaDisciplina : atletaDisciplinaListOld) {
-                if (!atletaDisciplinaListNew.contains(atletaDisciplinaListOldAtletaDisciplina)) {
-                    atletaDisciplinaListOldAtletaDisciplina.setIdIntitucion(null);
-                    atletaDisciplinaListOldAtletaDisciplina = em.merge(atletaDisciplinaListOldAtletaDisciplina);
+            for (Atleta atletaListOldAtleta : atletaListOld) {
+                if (!atletaListNew.contains(atletaListOldAtleta)) {
+                    atletaListOldAtleta.setIdInstitucion(null);
+                    atletaListOldAtleta = em.merge(atletaListOldAtleta);
                 }
             }
-            for (AtletaDisciplina atletaDisciplinaListNewAtletaDisciplina : atletaDisciplinaListNew) {
-                if (!atletaDisciplinaListOld.contains(atletaDisciplinaListNewAtletaDisciplina)) {
-                    Institucion oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina = atletaDisciplinaListNewAtletaDisciplina.getIdIntitucion();
-                    atletaDisciplinaListNewAtletaDisciplina.setIdIntitucion(institucion);
-                    atletaDisciplinaListNewAtletaDisciplina = em.merge(atletaDisciplinaListNewAtletaDisciplina);
-                    if (oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina != null && !oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina.equals(institucion)) {
-                        oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListNewAtletaDisciplina);
-                        oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina = em.merge(oldIdIntitucionOfAtletaDisciplinaListNewAtletaDisciplina);
+            for (Atleta atletaListNewAtleta : atletaListNew) {
+                if (!atletaListOld.contains(atletaListNewAtleta)) {
+                    Institucion oldIdInstitucionOfAtletaListNewAtleta = atletaListNewAtleta.getIdInstitucion();
+                    atletaListNewAtleta.setIdInstitucion(institucion);
+                    atletaListNewAtleta = em.merge(atletaListNewAtleta);
+                    if (oldIdInstitucionOfAtletaListNewAtleta != null && !oldIdInstitucionOfAtletaListNewAtleta.equals(institucion)) {
+                        oldIdInstitucionOfAtletaListNewAtleta.getAtletaList().remove(atletaListNewAtleta);
+                        oldIdInstitucionOfAtletaListNewAtleta = em.merge(oldIdInstitucionOfAtletaListNewAtleta);
                     }
                 }
             }
@@ -145,7 +143,7 @@ public class InstitucionJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = institucion.getIdIntitucion();
+                Integer id = institucion.getIdInstitucion();
                 if (findInstitucion(id) == null) {
                     throw new NonexistentEntityException("The institucion with id " + id + " no longer exists.");
                 }
@@ -166,7 +164,7 @@ public class InstitucionJpaController implements Serializable {
             Institucion institucion;
             try {
                 institucion = em.getReference(Institucion.class, id);
-                institucion.getIdIntitucion();
+                institucion.getIdInstitucion();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The institucion with id " + id + " no longer exists.", enfe);
             }
@@ -175,10 +173,10 @@ public class InstitucionJpaController implements Serializable {
                 idEstado.getInstitucionList().remove(institucion);
                 idEstado = em.merge(idEstado);
             }
-            List<AtletaDisciplina> atletaDisciplinaList = institucion.getAtletaDisciplinaList();
-            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : atletaDisciplinaList) {
-                atletaDisciplinaListAtletaDisciplina.setIdIntitucion(null);
-                atletaDisciplinaListAtletaDisciplina = em.merge(atletaDisciplinaListAtletaDisciplina);
+            List<Atleta> atletaList = institucion.getAtletaList();
+            for (Atleta atletaListAtleta : atletaList) {
+                atletaListAtleta.setIdInstitucion(null);
+                atletaListAtleta = em.merge(atletaListAtleta);
             }
             em.remove(institucion);
             utx.commit();

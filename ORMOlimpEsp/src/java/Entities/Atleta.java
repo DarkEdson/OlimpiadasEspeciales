@@ -6,15 +6,11 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
@@ -22,13 +18,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.PostLoad;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,6 +32,7 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "atleta")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Atleta.findAll", query = "SELECT a FROM Atleta a")
     , @NamedQuery(name = "Atleta.findByIdAtleta", query = "SELECT a FROM Atleta a WHERE a.idAtleta = :idAtleta")
@@ -44,19 +41,16 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Atleta.findByDpi", query = "SELECT a FROM Atleta a WHERE a.dpi = :dpi")
     , @NamedQuery(name = "Atleta.findByDomicilio", query = "SELECT a FROM Atleta a WHERE a.domicilio = :domicilio")
     , @NamedQuery(name = "Atleta.findByTelefono", query = "SELECT a FROM Atleta a WHERE a.telefono = :telefono")
-    , @NamedQuery(name = "Atleta.findByMovil", query = "SELECT a FROM Atleta a WHERE a.movil = :movil")
-    , @NamedQuery(name = "Atleta.findByFechaIngreso", query = "SELECT a FROM Atleta a WHERE a.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Atleta.findByFechaActualizacion", query = "SELECT a FROM Atleta a WHERE a.fechaActualizacion = :fechaActualizacion")})
+    , @NamedQuery(name = "Atleta.findByMovil", query = "SELECT a FROM Atleta a WHERE a.movil = :movil")})
 public class Atleta implements Serializable {
 
-    private static final long serialVersionUID = -5425466181405633588L;
-
-   
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
     @Column(name = "ID_ATLETA")
-    private Integer idAtleta;
+    private String idAtleta;
     @Size(max = 100)
     @Column(name = "NOMBRE_ATLETA")
     private String nombreAtleta;
@@ -76,63 +70,38 @@ public class Atleta implements Serializable {
     @Size(max = 65535)
     @Column(name = "COMENTARIOS")
     private String comentarios;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
+    @JoinColumn(name = "ID_INSTITUCION", referencedColumnName = "ID_INSTITUCION")
+    @ManyToOne
+    private Institucion idInstitucion;
     @JoinColumn(name = "ID_DEPARTAMENTO", referencedColumnName = "ID_DEPARTAMENTO")
     @ManyToOne
     private Departamento idDepartamento;
     @JoinColumn(name = "ID_DIAGNOSTICO", referencedColumnName = "ID_DIAGNOSTICO")
     @ManyToOne
     private Diagnostico idDiagnostico;
-    @JoinColumn(name = "ID_TUTOR1", referencedColumnName = "ID_TUTOR")
-    @ManyToOne
-    private Tutor idTutor1;
-    @JoinColumn(name = "ID_TUTOR2", referencedColumnName = "ID_TUTOR")
-    @ManyToOne
-    private Tutor idTutor2;
     @JoinColumn(name = "ID_SITIO_ENTRENAMIENTO", referencedColumnName = "ID_SITIO_ENTRENAMIENTO")
     @ManyToOne
     private SitioEntrenamiento idSitioEntrenamiento;
-    @JoinColumn(name = "ID_USUARIO_INGRESO", referencedColumnName = "ID_USUARIO")
-    @ManyToOne
-    private Usuarios idUsuarioIngreso;
-    @JoinColumn(name = "ID_USUARIO_ACTUALIZACION", referencedColumnName = "ID_USUARIO")
-    @ManyToOne
-    private Usuarios idUsuarioActualizacion;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
     @OneToMany(mappedBy = "idAtleta")
     private List<AtletaDisciplina> atletaDisciplinaList;
-    @Transient
-    private int edad;
+    @OneToMany(mappedBy = "idAtleta")
+    private List<Tutor> tutorList;
 
     public Atleta() {
     }
 
-    public Atleta(Integer idAtleta) {
+    public Atleta(String idAtleta) {
         this.idAtleta = idAtleta;
     }
 
-    public Atleta(Integer idAtleta, Date fechaIngreso, Date fechaActualizacion) {
-        this.idAtleta = idAtleta;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdAtleta() {
+    public String getIdAtleta() {
         return idAtleta;
     }
 
-    public void setIdAtleta(Integer idAtleta) {
+    public void setIdAtleta(String idAtleta) {
         this.idAtleta = idAtleta;
     }
 
@@ -192,20 +161,12 @@ public class Atleta implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
+    public Institucion getIdInstitucion() {
+        return idInstitucion;
     }
 
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
+    public void setIdInstitucion(Institucion idInstitucion) {
+        this.idInstitucion = idInstitucion;
     }
 
     public Departamento getIdDepartamento() {
@@ -224,44 +185,12 @@ public class Atleta implements Serializable {
         this.idDiagnostico = idDiagnostico;
     }
 
-    public Tutor getIdTutor1() {
-        return idTutor1;
-    }
-
-    public void setIdTutor1(Tutor idTutor1) {
-        this.idTutor1 = idTutor1;
-    }
-
-    public Tutor getIdTutor2() {
-        return idTutor2;
-    }
-
-    public void setIdTutor2(Tutor idTutor2) {
-        this.idTutor2 = idTutor2;
-    }
-
     public SitioEntrenamiento getIdSitioEntrenamiento() {
         return idSitioEntrenamiento;
     }
 
     public void setIdSitioEntrenamiento(SitioEntrenamiento idSitioEntrenamiento) {
         this.idSitioEntrenamiento = idSitioEntrenamiento;
-    }
-
-    public Usuarios getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Usuarios idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Usuarios getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Usuarios idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
     }
 
     public Estado getIdEstado() {
@@ -272,6 +201,7 @@ public class Atleta implements Serializable {
         this.idEstado = idEstado;
     }
 
+    @XmlTransient
     public List<AtletaDisciplina> getAtletaDisciplinaList() {
         return atletaDisciplinaList;
     }
@@ -279,32 +209,16 @@ public class Atleta implements Serializable {
     public void setAtletaDisciplinaList(List<AtletaDisciplina> atletaDisciplinaList) {
         this.atletaDisciplinaList = atletaDisciplinaList;
     }
-    
-    @PostLoad
-    public void calcularEdad() {
-		Calendar cumple = new GregorianCalendar();
-		Calendar ahora = new GregorianCalendar();
-		cumple.setTime(fechaNacimiento);
-		ahora.setTime(new Date()); // Comprobar que la fecha de nacimiento sea
-									// anterior a la actual
-		if (ahora.compareTo(cumple) < 0) { // Si no es anterior poner la edad a
-											// 0
-			edad = 0;
-		} else {
-			int ajuste = (ahora.get(Calendar.DAY_OF_YEAR)
-					- cumple.get(Calendar.DAY_OF_YEAR) < 0) ? -1 : 0;
-			edad = ahora.get(Calendar.YEAR) - cumple.get(Calendar.YEAR)
-					+ ajuste;
-		}
-	}
-    
-	public int getEdad() {
-		return edad;
-	}
- 
-	public void setEdad(int edad) {
-		this.edad = edad;
-	}
+
+    @XmlTransient
+    public List<Tutor> getTutorList() {
+        return tutorList;
+    }
+
+    public void setTutorList(List<Tutor> tutorList) {
+        this.tutorList = tutorList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

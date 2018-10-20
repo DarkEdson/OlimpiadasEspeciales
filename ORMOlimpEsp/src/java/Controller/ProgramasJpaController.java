@@ -6,7 +6,6 @@
 package Controller;
 
 import Controller.exceptions.NonexistentEntityException;
-import Controller.exceptions.PreexistingEntityException;
 import Controller.exceptions.RollbackFailureException;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -15,7 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entities.Estado;
 import Entities.AtletaDisciplina;
-import Entities.Disciplinas;
+import Entities.Programas;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -27,9 +26,9 @@ import javax.transaction.UserTransaction;
  *
  * @author axel.medina
  */
-public class DisciplinasJpaController implements Serializable {
+public class ProgramasJpaController implements Serializable {
 
-    public DisciplinasJpaController() {
+    public ProgramasJpaController() {
         this.utx = utx;
         this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
     }
@@ -40,37 +39,37 @@ public class DisciplinasJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Disciplinas disciplinas) throws PreexistingEntityException, RollbackFailureException, Exception {
-        if (disciplinas.getAtletaDisciplinaList() == null) {
-            disciplinas.setAtletaDisciplinaList(new ArrayList<AtletaDisciplina>());
+    public void create(Programas programas) throws RollbackFailureException, Exception {
+        if (programas.getAtletaDisciplinaList() == null) {
+            programas.setAtletaDisciplinaList(new ArrayList<AtletaDisciplina>());
         }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Estado idEstado = disciplinas.getIdEstado();
+            Estado idEstado = programas.getIdEstado();
             if (idEstado != null) {
                 idEstado = em.getReference(idEstado.getClass(), idEstado.getIdEstado());
-                disciplinas.setIdEstado(idEstado);
+                programas.setIdEstado(idEstado);
             }
             List<AtletaDisciplina> attachedAtletaDisciplinaList = new ArrayList<AtletaDisciplina>();
-            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplinaToAttach : disciplinas.getAtletaDisciplinaList()) {
+            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplinaToAttach : programas.getAtletaDisciplinaList()) {
                 atletaDisciplinaListAtletaDisciplinaToAttach = em.getReference(atletaDisciplinaListAtletaDisciplinaToAttach.getClass(), atletaDisciplinaListAtletaDisciplinaToAttach.getIdAtletaDisciplina());
                 attachedAtletaDisciplinaList.add(atletaDisciplinaListAtletaDisciplinaToAttach);
             }
-            disciplinas.setAtletaDisciplinaList(attachedAtletaDisciplinaList);
-            em.persist(disciplinas);
+            programas.setAtletaDisciplinaList(attachedAtletaDisciplinaList);
+            em.persist(programas);
             if (idEstado != null) {
-                idEstado.getDisciplinasList().add(disciplinas);
+                idEstado.getProgramasList().add(programas);
                 idEstado = em.merge(idEstado);
             }
-            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : disciplinas.getAtletaDisciplinaList()) {
-                Disciplinas oldIdDisciplinaOfAtletaDisciplinaListAtletaDisciplina = atletaDisciplinaListAtletaDisciplina.getIdDisciplina();
-                atletaDisciplinaListAtletaDisciplina.setIdDisciplina(disciplinas);
+            for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : programas.getAtletaDisciplinaList()) {
+                Programas oldIdProgramaOfAtletaDisciplinaListAtletaDisciplina = atletaDisciplinaListAtletaDisciplina.getIdPrograma();
+                atletaDisciplinaListAtletaDisciplina.setIdPrograma(programas);
                 atletaDisciplinaListAtletaDisciplina = em.merge(atletaDisciplinaListAtletaDisciplina);
-                if (oldIdDisciplinaOfAtletaDisciplinaListAtletaDisciplina != null) {
-                    oldIdDisciplinaOfAtletaDisciplinaListAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListAtletaDisciplina);
-                    oldIdDisciplinaOfAtletaDisciplinaListAtletaDisciplina = em.merge(oldIdDisciplinaOfAtletaDisciplinaListAtletaDisciplina);
+                if (oldIdProgramaOfAtletaDisciplinaListAtletaDisciplina != null) {
+                    oldIdProgramaOfAtletaDisciplinaListAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListAtletaDisciplina);
+                    oldIdProgramaOfAtletaDisciplinaListAtletaDisciplina = em.merge(oldIdProgramaOfAtletaDisciplinaListAtletaDisciplina);
                 }
             }
             utx.commit();
@@ -80,9 +79,6 @@ public class DisciplinasJpaController implements Serializable {
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
             }
-            if (findDisciplinas(disciplinas.getIdDisciplina()) != null) {
-                throw new PreexistingEntityException("Disciplinas " + disciplinas + " already exists.", ex);
-            }
             throw ex;
         } finally {
             if (em != null) {
@@ -91,19 +87,19 @@ public class DisciplinasJpaController implements Serializable {
         }
     }
 
-    public void edit(Disciplinas disciplinas) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void edit(Programas programas) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Disciplinas persistentDisciplinas = em.find(Disciplinas.class, disciplinas.getIdDisciplina());
-            Estado idEstadoOld = persistentDisciplinas.getIdEstado();
-            Estado idEstadoNew = disciplinas.getIdEstado();
-            List<AtletaDisciplina> atletaDisciplinaListOld = persistentDisciplinas.getAtletaDisciplinaList();
-            List<AtletaDisciplina> atletaDisciplinaListNew = disciplinas.getAtletaDisciplinaList();
+            Programas persistentProgramas = em.find(Programas.class, programas.getIdPrograma());
+            Estado idEstadoOld = persistentProgramas.getIdEstado();
+            Estado idEstadoNew = programas.getIdEstado();
+            List<AtletaDisciplina> atletaDisciplinaListOld = persistentProgramas.getAtletaDisciplinaList();
+            List<AtletaDisciplina> atletaDisciplinaListNew = programas.getAtletaDisciplinaList();
             if (idEstadoNew != null) {
                 idEstadoNew = em.getReference(idEstadoNew.getClass(), idEstadoNew.getIdEstado());
-                disciplinas.setIdEstado(idEstadoNew);
+                programas.setIdEstado(idEstadoNew);
             }
             List<AtletaDisciplina> attachedAtletaDisciplinaListNew = new ArrayList<AtletaDisciplina>();
             for (AtletaDisciplina atletaDisciplinaListNewAtletaDisciplinaToAttach : atletaDisciplinaListNew) {
@@ -111,30 +107,30 @@ public class DisciplinasJpaController implements Serializable {
                 attachedAtletaDisciplinaListNew.add(atletaDisciplinaListNewAtletaDisciplinaToAttach);
             }
             atletaDisciplinaListNew = attachedAtletaDisciplinaListNew;
-            disciplinas.setAtletaDisciplinaList(atletaDisciplinaListNew);
-            disciplinas = em.merge(disciplinas);
+            programas.setAtletaDisciplinaList(atletaDisciplinaListNew);
+            programas = em.merge(programas);
             if (idEstadoOld != null && !idEstadoOld.equals(idEstadoNew)) {
-                idEstadoOld.getDisciplinasList().remove(disciplinas);
+                idEstadoOld.getProgramasList().remove(programas);
                 idEstadoOld = em.merge(idEstadoOld);
             }
             if (idEstadoNew != null && !idEstadoNew.equals(idEstadoOld)) {
-                idEstadoNew.getDisciplinasList().add(disciplinas);
+                idEstadoNew.getProgramasList().add(programas);
                 idEstadoNew = em.merge(idEstadoNew);
             }
             for (AtletaDisciplina atletaDisciplinaListOldAtletaDisciplina : atletaDisciplinaListOld) {
                 if (!atletaDisciplinaListNew.contains(atletaDisciplinaListOldAtletaDisciplina)) {
-                    atletaDisciplinaListOldAtletaDisciplina.setIdDisciplina(null);
+                    atletaDisciplinaListOldAtletaDisciplina.setIdPrograma(null);
                     atletaDisciplinaListOldAtletaDisciplina = em.merge(atletaDisciplinaListOldAtletaDisciplina);
                 }
             }
             for (AtletaDisciplina atletaDisciplinaListNewAtletaDisciplina : atletaDisciplinaListNew) {
                 if (!atletaDisciplinaListOld.contains(atletaDisciplinaListNewAtletaDisciplina)) {
-                    Disciplinas oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina = atletaDisciplinaListNewAtletaDisciplina.getIdDisciplina();
-                    atletaDisciplinaListNewAtletaDisciplina.setIdDisciplina(disciplinas);
+                    Programas oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina = atletaDisciplinaListNewAtletaDisciplina.getIdPrograma();
+                    atletaDisciplinaListNewAtletaDisciplina.setIdPrograma(programas);
                     atletaDisciplinaListNewAtletaDisciplina = em.merge(atletaDisciplinaListNewAtletaDisciplina);
-                    if (oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina != null && !oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina.equals(disciplinas)) {
-                        oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListNewAtletaDisciplina);
-                        oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina = em.merge(oldIdDisciplinaOfAtletaDisciplinaListNewAtletaDisciplina);
+                    if (oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina != null && !oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina.equals(programas)) {
+                        oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina.getAtletaDisciplinaList().remove(atletaDisciplinaListNewAtletaDisciplina);
+                        oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina = em.merge(oldIdProgramaOfAtletaDisciplinaListNewAtletaDisciplina);
                     }
                 }
             }
@@ -147,9 +143,9 @@ public class DisciplinasJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                String id = disciplinas.getIdDisciplina();
-                if (findDisciplinas(id) == null) {
-                    throw new NonexistentEntityException("The disciplinas with id " + id + " no longer exists.");
+                Integer id = programas.getIdPrograma();
+                if (findProgramas(id) == null) {
+                    throw new NonexistentEntityException("The programas with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -160,29 +156,29 @@ public class DisciplinasJpaController implements Serializable {
         }
     }
 
-    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
-            Disciplinas disciplinas;
+            Programas programas;
             try {
-                disciplinas = em.getReference(Disciplinas.class, id);
-                disciplinas.getIdDisciplina();
+                programas = em.getReference(Programas.class, id);
+                programas.getIdPrograma();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The disciplinas with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The programas with id " + id + " no longer exists.", enfe);
             }
-            Estado idEstado = disciplinas.getIdEstado();
+            Estado idEstado = programas.getIdEstado();
             if (idEstado != null) {
-                idEstado.getDisciplinasList().remove(disciplinas);
+                idEstado.getProgramasList().remove(programas);
                 idEstado = em.merge(idEstado);
             }
-            List<AtletaDisciplina> atletaDisciplinaList = disciplinas.getAtletaDisciplinaList();
+            List<AtletaDisciplina> atletaDisciplinaList = programas.getAtletaDisciplinaList();
             for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : atletaDisciplinaList) {
-                atletaDisciplinaListAtletaDisciplina.setIdDisciplina(null);
+                atletaDisciplinaListAtletaDisciplina.setIdPrograma(null);
                 atletaDisciplinaListAtletaDisciplina = em.merge(atletaDisciplinaListAtletaDisciplina);
             }
-            em.remove(disciplinas);
+            em.remove(programas);
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -198,19 +194,19 @@ public class DisciplinasJpaController implements Serializable {
         }
     }
 
-    public List<Disciplinas> findDisciplinasEntities() {
-        return findDisciplinasEntities(true, -1, -1);
+    public List<Programas> findProgramasEntities() {
+        return findProgramasEntities(true, -1, -1);
     }
 
-    public List<Disciplinas> findDisciplinasEntities(int maxResults, int firstResult) {
-        return findDisciplinasEntities(false, maxResults, firstResult);
+    public List<Programas> findProgramasEntities(int maxResults, int firstResult) {
+        return findProgramasEntities(false, maxResults, firstResult);
     }
 
-    private List<Disciplinas> findDisciplinasEntities(boolean all, int maxResults, int firstResult) {
+    private List<Programas> findProgramasEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Disciplinas.class));
+            cq.select(cq.from(Programas.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -222,20 +218,20 @@ public class DisciplinasJpaController implements Serializable {
         }
     }
 
-    public Disciplinas findDisciplinas(String id) {
+    public Programas findProgramas(Integer id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Disciplinas.class, id);
+            return em.find(Programas.class, id);
         } finally {
             em.close();
         }
     }
 
-    public int getDisciplinasCount() {
+    public int getProgramasCount() {
         EntityManager em = getEntityManager();
         try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Disciplinas> rt = cq.from(Disciplinas.class);
+            Root<Programas> rt = cq.from(Programas.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();

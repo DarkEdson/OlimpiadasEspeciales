@@ -6,7 +6,6 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,10 +19,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,19 +29,16 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "roles")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r")
     , @NamedQuery(name = "Roles.findByIdRol", query = "SELECT r FROM Roles r WHERE r.idRol = :idRol")
-    , @NamedQuery(name = "Roles.findByRol", query = "SELECT r FROM Roles r WHERE r.rol = :rol")
-    , @NamedQuery(name = "Roles.findByFechaIngreso", query = "SELECT r FROM Roles r WHERE r.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Roles.findByIdUsuarioIngreso", query = "SELECT r FROM Roles r WHERE r.idUsuarioIngreso = :idUsuarioIngreso")
-    , @NamedQuery(name = "Roles.findByFechaActualizacion", query = "SELECT r FROM Roles r WHERE r.fechaActualizacion = :fechaActualizacion")
-    , @NamedQuery(name = "Roles.findByIdUsuarioActualizacion", query = "SELECT r FROM Roles r WHERE r.idUsuarioActualizacion = :idUsuarioActualizacion")})
+    , @NamedQuery(name = "Roles.findByRol", query = "SELECT r FROM Roles r WHERE r.rol = :rol")})
 public class Roles implements Serializable {
 
-    private static final long serialVersionUID = -7742631471707887888L;
+    private static final long serialVersionUID = 8114563314825458280L;
 
-  
+   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -52,20 +47,6 @@ public class Roles implements Serializable {
     @Size(max = 100)
     @Column(name = "ROL")
     private String rol;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Column(name = "ID_USUARIO_INGRESO")
-    private Integer idUsuarioIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
-    @Column(name = "ID_USUARIO_ACTUALIZACION")
-    private Integer idUsuarioActualizacion;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
@@ -77,12 +58,6 @@ public class Roles implements Serializable {
 
     public Roles(Integer idRol) {
         this.idRol = idRol;
-    }
-
-    public Roles(Integer idRol, Date fechaIngreso, Date fechaActualizacion) {
-        this.idRol = idRol;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
     }
 
     public Integer getIdRol() {
@@ -101,38 +76,6 @@ public class Roles implements Serializable {
         this.rol = rol;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Integer getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Integer idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Integer idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
-    }
-
     public Estado getIdEstado() {
         return idEstado;
     }
@@ -141,6 +84,7 @@ public class Roles implements Serializable {
         this.idEstado = idEstado;
     }
 
+    @XmlTransient
     public List<Usuarios> getUsuariosList() {
         return usuariosList;
     }
@@ -171,7 +115,7 @@ public class Roles implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.Roles[ idRol=" + idRol + " ]";
+        return "Entities.Roles[ idRol=" + idRol + ", rol=" + rol + ", idEstado=" + idEstado + " ]";
     }
     
 }

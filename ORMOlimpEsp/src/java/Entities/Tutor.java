@@ -7,7 +7,6 @@ package Entities;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,12 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -31,30 +29,27 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "tutor")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Tutor.findAll", query = "SELECT t FROM Tutor t")
     , @NamedQuery(name = "Tutor.findByIdTutor", query = "SELECT t FROM Tutor t WHERE t.idTutor = :idTutor")
-    , @NamedQuery(name = "Tutor.findByNombreTutor", query = "SELECT t FROM Tutor t WHERE t.nombreTutor = :nombreTutor")
+    , @NamedQuery(name = "Tutor.findByNombre", query = "SELECT t FROM Tutor t WHERE t.nombre = :nombre")
     , @NamedQuery(name = "Tutor.findByFechaNacimiento", query = "SELECT t FROM Tutor t WHERE t.fechaNacimiento = :fechaNacimiento")
     , @NamedQuery(name = "Tutor.findByDpi", query = "SELECT t FROM Tutor t WHERE t.dpi = :dpi")
     , @NamedQuery(name = "Tutor.findByDireccionLaboral", query = "SELECT t FROM Tutor t WHERE t.direccionLaboral = :direccionLaboral")
     , @NamedQuery(name = "Tutor.findByTelefono", query = "SELECT t FROM Tutor t WHERE t.telefono = :telefono")
-    , @NamedQuery(name = "Tutor.findByMovil", query = "SELECT t FROM Tutor t WHERE t.movil = :movil")
-    , @NamedQuery(name = "Tutor.findByFechaIngreso", query = "SELECT t FROM Tutor t WHERE t.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Tutor.findByFechaActualizacion", query = "SELECT t FROM Tutor t WHERE t.fechaActualizacion = :fechaActualizacion")})
+    , @NamedQuery(name = "Tutor.findByMovil", query = "SELECT t FROM Tutor t WHERE t.movil = :movil")})
 public class Tutor implements Serializable {
 
-    private static final long serialVersionUID = -4992152249523973903L;
-
-    
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "ID_TUTOR")
     private Integer idTutor;
     @Size(max = 100)
-    @Column(name = "NOMBRE_TUTOR")
-    private String nombreTutor;
+    @Column(name = "NOMBRE")
+    private String nombre;
     @Column(name = "FECHA_NACIMIENTO")
     @Temporal(TemporalType.DATE)
     private Date fechaNacimiento;
@@ -67,26 +62,9 @@ public class Tutor implements Serializable {
     private Integer telefono;
     @Column(name = "MOVIL")
     private Integer movil;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
-    @OneToMany(mappedBy = "idTutor1")
-    private List<Atleta> atletaList;
-    @OneToMany(mappedBy = "idTutor2")
-    private List<Atleta> atletaList1;
-    @JoinColumn(name = "ID_USUARIO_INGRESO", referencedColumnName = "ID_USUARIO")
+    @JoinColumn(name = "ID_ATLETA", referencedColumnName = "ID_ATLETA")
     @ManyToOne
-    private Usuarios idUsuarioIngreso;
-    @JoinColumn(name = "ID_USUARIO_ACTUALIZACION", referencedColumnName = "ID_USUARIO")
-    @ManyToOne
-    private Usuarios idUsuarioActualizacion;
+    private Atleta idAtleta;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
@@ -98,12 +76,6 @@ public class Tutor implements Serializable {
         this.idTutor = idTutor;
     }
 
-    public Tutor(Integer idTutor, Date fechaIngreso, Date fechaActualizacion) {
-        this.idTutor = idTutor;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
     public Integer getIdTutor() {
         return idTutor;
     }
@@ -112,12 +84,12 @@ public class Tutor implements Serializable {
         this.idTutor = idTutor;
     }
 
-    public String getNombreTutor() {
-        return nombreTutor;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setNombreTutor(String nombreTutor) {
-        this.nombreTutor = nombreTutor;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public Date getFechaNacimiento() {
@@ -160,52 +132,12 @@ public class Tutor implements Serializable {
         this.movil = movil;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
+    public Atleta getIdAtleta() {
+        return idAtleta;
     }
 
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public List<Atleta> getAtletaList() {
-        return atletaList;
-    }
-
-    public void setAtletaList(List<Atleta> atletaList) {
-        this.atletaList = atletaList;
-    }
-
-    public List<Atleta> getAtletaList1() {
-        return atletaList1;
-    }
-
-    public void setAtletaList1(List<Atleta> atletaList1) {
-        this.atletaList1 = atletaList1;
-    }
-
-    public Usuarios getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Usuarios idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Usuarios getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Usuarios idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
+    public void setIdAtleta(Atleta idAtleta) {
+        this.idAtleta = idAtleta;
     }
 
     public Estado getIdEstado() {

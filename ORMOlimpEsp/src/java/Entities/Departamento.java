@@ -6,7 +6,6 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -20,10 +19,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -31,19 +29,14 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "departamento")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Departamento.findAll", query = "SELECT d FROM Departamento d")
     , @NamedQuery(name = "Departamento.findByIdDepartamento", query = "SELECT d FROM Departamento d WHERE d.idDepartamento = :idDepartamento")
-    , @NamedQuery(name = "Departamento.findByDepartamento", query = "SELECT d FROM Departamento d WHERE d.departamento = :departamento")
-    , @NamedQuery(name = "Departamento.findByFechaIngreso", query = "SELECT d FROM Departamento d WHERE d.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Departamento.findByIdUsuarioIngreso", query = "SELECT d FROM Departamento d WHERE d.idUsuarioIngreso = :idUsuarioIngreso")
-    , @NamedQuery(name = "Departamento.findByFechaActualizacion", query = "SELECT d FROM Departamento d WHERE d.fechaActualizacion = :fechaActualizacion")
-    , @NamedQuery(name = "Departamento.findByIdUsuarioActualizacion", query = "SELECT d FROM Departamento d WHERE d.idUsuarioActualizacion = :idUsuarioActualizacion")})
+    , @NamedQuery(name = "Departamento.findByDepartamento", query = "SELECT d FROM Departamento d WHERE d.departamento = :departamento")})
 public class Departamento implements Serializable {
 
-    private static final long serialVersionUID = 1243095731984600407L;
-
-    
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -52,20 +45,6 @@ public class Departamento implements Serializable {
     @Size(max = 100)
     @Column(name = "DEPARTAMENTO")
     private String departamento;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Column(name = "ID_USUARIO_INGRESO")
-    private Integer idUsuarioIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
-    @Column(name = "ID_USUARIO_ACTUALIZACION")
-    private Integer idUsuarioActualizacion;
     @OneToMany(mappedBy = "idDepartamento")
     private List<Atleta> atletaList;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
@@ -77,12 +56,6 @@ public class Departamento implements Serializable {
 
     public Departamento(Integer idDepartamento) {
         this.idDepartamento = idDepartamento;
-    }
-
-    public Departamento(Integer idDepartamento, Date fechaIngreso, Date fechaActualizacion) {
-        this.idDepartamento = idDepartamento;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
     }
 
     public Integer getIdDepartamento() {
@@ -101,38 +74,7 @@ public class Departamento implements Serializable {
         this.departamento = departamento;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Integer getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Integer idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Integer idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
-    }
-
+    @XmlTransient
     public List<Atleta> getAtletaList() {
         return atletaList;
     }

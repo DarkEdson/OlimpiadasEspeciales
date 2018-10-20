@@ -6,7 +6,6 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -18,10 +17,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,19 +27,15 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "estado")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Estado.findAll", query = "SELECT e FROM Estado e")
     , @NamedQuery(name = "Estado.findByIdEstado", query = "SELECT e FROM Estado e WHERE e.idEstado = :idEstado")
-    , @NamedQuery(name = "Estado.findByEstado", query = "SELECT e FROM Estado e WHERE e.estado = :estado")
-    , @NamedQuery(name = "Estado.findByFechaIngreso", query = "SELECT e FROM Estado e WHERE e.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Estado.findByIdUsuarioIngreso", query = "SELECT e FROM Estado e WHERE e.idUsuarioIngreso = :idUsuarioIngreso")
-    , @NamedQuery(name = "Estado.findByFechaActualizacion", query = "SELECT e FROM Estado e WHERE e.fechaActualizacion = :fechaActualizacion")
-    , @NamedQuery(name = "Estado.findByIdUsuarioActualizacion", query = "SELECT e FROM Estado e WHERE e.idUsuarioActualizacion = :idUsuarioActualizacion")})
+    , @NamedQuery(name = "Estado.findByEstado", query = "SELECT e FROM Estado e WHERE e.estado = :estado")})
 public class Estado implements Serializable {
 
-    private static final long serialVersionUID = 2816732604927930426L;
+    private static final long serialVersionUID = 4413593486393620338L;
 
-  
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -50,26 +44,14 @@ public class Estado implements Serializable {
     @Size(max = 100)
     @Column(name = "ESTADO")
     private String estado;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Column(name = "ID_USUARIO_INGRESO")
-    private Integer idUsuarioIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
-    @Column(name = "ID_USUARIO_ACTUALIZACION")
-    private Integer idUsuarioActualizacion;
     @OneToMany(mappedBy = "idEstado")
     private List<Disciplinas> disciplinasList;
     @OneToMany(mappedBy = "idEstado")
     private List<Atleta> atletaList;
     @OneToMany(mappedBy = "idEstado")
     private List<Diagnostico> diagnosticoList;
+    @OneToMany(mappedBy = "idEstado")
+    private List<Programas> programasList;
     @OneToMany(mappedBy = "idEstado")
     private List<Roles> rolesList;
     @OneToMany(mappedBy = "idEstado")
@@ -92,12 +74,6 @@ public class Estado implements Serializable {
         this.idEstado = idEstado;
     }
 
-    public Estado(Integer idEstado, Date fechaIngreso, Date fechaActualizacion) {
-        this.idEstado = idEstado;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
     public Integer getIdEstado() {
         return idEstado;
     }
@@ -114,38 +90,7 @@ public class Estado implements Serializable {
         this.estado = estado;
     }
 
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Integer getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Integer idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Integer idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
-    }
-
+    @XmlTransient
     public List<Disciplinas> getDisciplinasList() {
         return disciplinasList;
     }
@@ -154,6 +99,7 @@ public class Estado implements Serializable {
         this.disciplinasList = disciplinasList;
     }
 
+    @XmlTransient
     public List<Atleta> getAtletaList() {
         return atletaList;
     }
@@ -162,6 +108,7 @@ public class Estado implements Serializable {
         this.atletaList = atletaList;
     }
 
+    @XmlTransient
     public List<Diagnostico> getDiagnosticoList() {
         return diagnosticoList;
     }
@@ -170,6 +117,16 @@ public class Estado implements Serializable {
         this.diagnosticoList = diagnosticoList;
     }
 
+    @XmlTransient
+    public List<Programas> getProgramasList() {
+        return programasList;
+    }
+
+    public void setProgramasList(List<Programas> programasList) {
+        this.programasList = programasList;
+    }
+
+    @XmlTransient
     public List<Roles> getRolesList() {
         return rolesList;
     }
@@ -178,6 +135,7 @@ public class Estado implements Serializable {
         this.rolesList = rolesList;
     }
 
+    @XmlTransient
     public List<Institucion> getInstitucionList() {
         return institucionList;
     }
@@ -186,6 +144,7 @@ public class Estado implements Serializable {
         this.institucionList = institucionList;
     }
 
+    @XmlTransient
     public List<SitioEntrenamiento> getSitioEntrenamientoList() {
         return sitioEntrenamientoList;
     }
@@ -194,6 +153,7 @@ public class Estado implements Serializable {
         this.sitioEntrenamientoList = sitioEntrenamientoList;
     }
 
+    @XmlTransient
     public List<Departamento> getDepartamentoList() {
         return departamentoList;
     }
@@ -202,6 +162,7 @@ public class Estado implements Serializable {
         this.departamentoList = departamentoList;
     }
 
+    @XmlTransient
     public List<Usuarios> getUsuariosList() {
         return usuariosList;
     }
@@ -210,6 +171,7 @@ public class Estado implements Serializable {
         this.usuariosList = usuariosList;
     }
 
+    @XmlTransient
     public List<AtletaDisciplina> getAtletaDisciplinaList() {
         return atletaDisciplinaList;
     }
@@ -218,6 +180,7 @@ public class Estado implements Serializable {
         this.atletaDisciplinaList = atletaDisciplinaList;
     }
 
+    @XmlTransient
     public List<Tutor> getTutorList() {
         return tutorList;
     }

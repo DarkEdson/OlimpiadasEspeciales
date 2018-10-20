@@ -6,14 +6,10 @@
 package Entities;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,10 +17,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -32,106 +28,50 @@ import javax.validation.constraints.Size;
  */
 @Entity
 @Table(name = "disciplinas")
+@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Disciplinas.findAll", query = "SELECT d FROM Disciplinas d")
     , @NamedQuery(name = "Disciplinas.findByIdDisciplina", query = "SELECT d FROM Disciplinas d WHERE d.idDisciplina = :idDisciplina")
-    , @NamedQuery(name = "Disciplinas.findByNombreDisciplina", query = "SELECT d FROM Disciplinas d WHERE d.nombreDisciplina = :nombreDisciplina")
-    , @NamedQuery(name = "Disciplinas.findByFechaIngreso", query = "SELECT d FROM Disciplinas d WHERE d.fechaIngreso = :fechaIngreso")
-    , @NamedQuery(name = "Disciplinas.findByIdUsuarioIngreso", query = "SELECT d FROM Disciplinas d WHERE d.idUsuarioIngreso = :idUsuarioIngreso")
-    , @NamedQuery(name = "Disciplinas.findByFechaActualizacion", query = "SELECT d FROM Disciplinas d WHERE d.fechaActualizacion = :fechaActualizacion")
-    , @NamedQuery(name = "Disciplinas.findByIdUsuarioActualizacion", query = "SELECT d FROM Disciplinas d WHERE d.idUsuarioActualizacion = :idUsuarioActualizacion")})
+    , @NamedQuery(name = "Disciplinas.findByDisciplina", query = "SELECT d FROM Disciplinas d WHERE d.disciplina = :disciplina")})
 public class Disciplinas implements Serializable {
 
-    private static final long serialVersionUID = -1282096363315192622L;
-
-    
+    private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 100)
     @Column(name = "ID_DISCIPLINA")
-    private Integer idDisciplina;
+    private String idDisciplina;
     @Size(max = 100)
-    @Column(name = "NOMBRE_DISCIPLINA")
-    private String nombreDisciplina;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_INGRESO")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaIngreso;
-    @Column(name = "ID_USUARIO_INGRESO")
-    private Integer idUsuarioIngreso;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "FECHA_ACTUALIZACION")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date fechaActualizacion;
-    @Column(name = "ID_USUARIO_ACTUALIZACION")
-    private Integer idUsuarioActualizacion;
+    @Column(name = "DISCIPLINA")
+    private String disciplina;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDisciplina")
+    @OneToMany(mappedBy = "idDisciplina")
     private List<AtletaDisciplina> atletaDisciplinaList;
 
     public Disciplinas() {
     }
 
-    public Disciplinas(Integer idDisciplina) {
+    public Disciplinas(String idDisciplina) {
         this.idDisciplina = idDisciplina;
     }
 
-    public Disciplinas(Integer idDisciplina, Date fechaIngreso, Date fechaActualizacion) {
-        this.idDisciplina = idDisciplina;
-        this.fechaIngreso = fechaIngreso;
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdDisciplina() {
+    public String getIdDisciplina() {
         return idDisciplina;
     }
 
-    public void setIdDisciplina(Integer idDisciplina) {
+    public void setIdDisciplina(String idDisciplina) {
         this.idDisciplina = idDisciplina;
     }
 
-    public String getNombreDisciplina() {
-        return nombreDisciplina;
+    public String getDisciplina() {
+        return disciplina;
     }
 
-    public void setNombreDisciplina(String nombreDisciplina) {
-        this.nombreDisciplina = nombreDisciplina;
-    }
-
-    public Date getFechaIngreso() {
-        return fechaIngreso;
-    }
-
-    public void setFechaIngreso(Date fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
-
-    public Integer getIdUsuarioIngreso() {
-        return idUsuarioIngreso;
-    }
-
-    public void setIdUsuarioIngreso(Integer idUsuarioIngreso) {
-        this.idUsuarioIngreso = idUsuarioIngreso;
-    }
-
-    public Date getFechaActualizacion() {
-        return fechaActualizacion;
-    }
-
-    public void setFechaActualizacion(Date fechaActualizacion) {
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Integer getIdUsuarioActualizacion() {
-        return idUsuarioActualizacion;
-    }
-
-    public void setIdUsuarioActualizacion(Integer idUsuarioActualizacion) {
-        this.idUsuarioActualizacion = idUsuarioActualizacion;
+    public void setDisciplina(String disciplina) {
+        this.disciplina = disciplina;
     }
 
     public Estado getIdEstado() {
@@ -142,6 +82,7 @@ public class Disciplinas implements Serializable {
         this.idEstado = idEstado;
     }
 
+    @XmlTransient
     public List<AtletaDisciplina> getAtletaDisciplinaList() {
         return atletaDisciplinaList;
     }

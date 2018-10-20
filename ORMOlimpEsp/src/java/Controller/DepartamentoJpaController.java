@@ -28,11 +28,9 @@ import javax.transaction.UserTransaction;
  */
 public class DepartamentoJpaController implements Serializable {
 
-    private static final long serialVersionUID = -8887092057847732049L;
-
     public DepartamentoJpaController() {
         this.utx = utx;
-       this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
+        this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");
     }
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;

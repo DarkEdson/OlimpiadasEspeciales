@@ -28,8 +28,6 @@ import javax.transaction.UserTransaction;
  */
 public class SitioEntrenamientoJpaController implements Serializable {
 
-    private static final long serialVersionUID = 8148416024540607493L;
-
     public SitioEntrenamientoJpaController() {
         this.utx = utx;
         this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");

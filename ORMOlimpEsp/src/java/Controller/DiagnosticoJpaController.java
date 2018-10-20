@@ -28,8 +28,6 @@ import javax.transaction.UserTransaction;
  */
 public class DiagnosticoJpaController implements Serializable {
 
-    private static final long serialVersionUID = 2236313600142386714L;
-
     public DiagnosticoJpaController() {
         this.utx = utx;
         this.emf = Persistence.createEntityManagerFactory("ORMOlimpEspPU");

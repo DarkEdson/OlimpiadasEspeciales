@@ -6,6 +6,7 @@
 package Controller;
 
 import Controller.exceptions.NonexistentEntityException;
+import Controller.exceptions.PreexistingEntityException;
 import Controller.exceptions.RollbackFailureException;
 import Entities.Atleta;
 import java.io.Serializable;
@@ -13,15 +14,15 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Entities.Institucion;
 import Entities.Departamento;
 import Entities.Diagnostico;
-import Entities.Tutor;
 import Entities.SitioEntrenamiento;
-import Entities.Usuarios;
 import Entities.Estado;
 import Entities.AtletaDisciplina;
 import java.util.ArrayList;
 import java.util.List;
+import Entities.Tutor;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,8 +33,6 @@ import javax.transaction.UserTransaction;
  * @author axel.medina
  */
 public class AtletaJpaController implements Serializable {
-
-    private static final long serialVersionUID = 3391549955219486187L;
 
     public AtletaJpaController() {
         this.utx = utx;
@@ -46,14 +45,22 @@ public class AtletaJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Atleta atleta) throws RollbackFailureException, Exception {
+    public void create(Atleta atleta) throws PreexistingEntityException, RollbackFailureException, Exception {
         if (atleta.getAtletaDisciplinaList() == null) {
             atleta.setAtletaDisciplinaList(new ArrayList<AtletaDisciplina>());
+        }
+        if (atleta.getTutorList() == null) {
+            atleta.setTutorList(new ArrayList<Tutor>());
         }
         EntityManager em = null;
         try {
             utx.begin();
             em = getEntityManager();
+            Institucion idInstitucion = atleta.getIdInstitucion();
+            if (idInstitucion != null) {
+                idInstitucion = em.getReference(idInstitucion.getClass(), idInstitucion.getIdInstitucion());
+                atleta.setIdInstitucion(idInstitucion);
+            }
             Departamento idDepartamento = atleta.getIdDepartamento();
             if (idDepartamento != null) {
                 idDepartamento = em.getReference(idDepartamento.getClass(), idDepartamento.getIdDepartamento());
@@ -64,30 +71,10 @@ public class AtletaJpaController implements Serializable {
                 idDiagnostico = em.getReference(idDiagnostico.getClass(), idDiagnostico.getIdDiagnostico());
                 atleta.setIdDiagnostico(idDiagnostico);
             }
-            Tutor idTutor1 = atleta.getIdTutor1();
-            if (idTutor1 != null) {
-                idTutor1 = em.getReference(idTutor1.getClass(), idTutor1.getIdTutor());
-                atleta.setIdTutor1(idTutor1);
-            }
-            Tutor idTutor2 = atleta.getIdTutor2();
-            if (idTutor2 != null) {
-                idTutor2 = em.getReference(idTutor2.getClass(), idTutor2.getIdTutor());
-                atleta.setIdTutor2(idTutor2);
-            }
             SitioEntrenamiento idSitioEntrenamiento = atleta.getIdSitioEntrenamiento();
             if (idSitioEntrenamiento != null) {
                 idSitioEntrenamiento = em.getReference(idSitioEntrenamiento.getClass(), idSitioEntrenamiento.getIdSitioEntrenamiento());
                 atleta.setIdSitioEntrenamiento(idSitioEntrenamiento);
-            }
-            Usuarios idUsuarioIngreso = atleta.getIdUsuarioIngreso();
-            if (idUsuarioIngreso != null) {
-                idUsuarioIngreso = em.getReference(idUsuarioIngreso.getClass(), idUsuarioIngreso.getIdUsuario());
-                atleta.setIdUsuarioIngreso(idUsuarioIngreso);
-            }
-            Usuarios idUsuarioActualizacion = atleta.getIdUsuarioActualizacion();
-            if (idUsuarioActualizacion != null) {
-                idUsuarioActualizacion = em.getReference(idUsuarioActualizacion.getClass(), idUsuarioActualizacion.getIdUsuario());
-                atleta.setIdUsuarioActualizacion(idUsuarioActualizacion);
             }
             Estado idEstado = atleta.getIdEstado();
             if (idEstado != null) {
@@ -100,7 +87,17 @@ public class AtletaJpaController implements Serializable {
                 attachedAtletaDisciplinaList.add(atletaDisciplinaListAtletaDisciplinaToAttach);
             }
             atleta.setAtletaDisciplinaList(attachedAtletaDisciplinaList);
+            List<Tutor> attachedTutorList = new ArrayList<Tutor>();
+            for (Tutor tutorListTutorToAttach : atleta.getTutorList()) {
+                tutorListTutorToAttach = em.getReference(tutorListTutorToAttach.getClass(), tutorListTutorToAttach.getIdTutor());
+                attachedTutorList.add(tutorListTutorToAttach);
+            }
+            atleta.setTutorList(attachedTutorList);
             em.persist(atleta);
+            if (idInstitucion != null) {
+                idInstitucion.getAtletaList().add(atleta);
+                idInstitucion = em.merge(idInstitucion);
+            }
             if (idDepartamento != null) {
                 idDepartamento.getAtletaList().add(atleta);
                 idDepartamento = em.merge(idDepartamento);
@@ -109,25 +106,9 @@ public class AtletaJpaController implements Serializable {
                 idDiagnostico.getAtletaList().add(atleta);
                 idDiagnostico = em.merge(idDiagnostico);
             }
-            if (idTutor1 != null) {
-                idTutor1.getAtletaList().add(atleta);
-                idTutor1 = em.merge(idTutor1);
-            }
-            if (idTutor2 != null) {
-                idTutor2.getAtletaList().add(atleta);
-                idTutor2 = em.merge(idTutor2);
-            }
             if (idSitioEntrenamiento != null) {
                 idSitioEntrenamiento.getAtletaList().add(atleta);
                 idSitioEntrenamiento = em.merge(idSitioEntrenamiento);
-            }
-            if (idUsuarioIngreso != null) {
-                idUsuarioIngreso.getAtletaList().add(atleta);
-                idUsuarioIngreso = em.merge(idUsuarioIngreso);
-            }
-            if (idUsuarioActualizacion != null) {
-                idUsuarioActualizacion.getAtletaList().add(atleta);
-                idUsuarioActualizacion = em.merge(idUsuarioActualizacion);
             }
             if (idEstado != null) {
                 idEstado.getAtletaList().add(atleta);
@@ -142,12 +123,24 @@ public class AtletaJpaController implements Serializable {
                     oldIdAtletaOfAtletaDisciplinaListAtletaDisciplina = em.merge(oldIdAtletaOfAtletaDisciplinaListAtletaDisciplina);
                 }
             }
+            for (Tutor tutorListTutor : atleta.getTutorList()) {
+                Atleta oldIdAtletaOfTutorListTutor = tutorListTutor.getIdAtleta();
+                tutorListTutor.setIdAtleta(atleta);
+                tutorListTutor = em.merge(tutorListTutor);
+                if (oldIdAtletaOfTutorListTutor != null) {
+                    oldIdAtletaOfTutorListTutor.getTutorList().remove(tutorListTutor);
+                    oldIdAtletaOfTutorListTutor = em.merge(oldIdAtletaOfTutorListTutor);
+                }
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
                 utx.rollback();
             } catch (Exception re) {
                 throw new RollbackFailureException("An error occurred attempting to roll back the transaction.", re);
+            }
+            if (findAtleta(atleta.getIdAtleta()) != null) {
+                throw new PreexistingEntityException("Atleta " + atleta + " already exists.", ex);
             }
             throw ex;
         } finally {
@@ -163,24 +156,24 @@ public class AtletaJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Atleta persistentAtleta = em.find(Atleta.class, atleta.getIdAtleta());
+            Institucion idInstitucionOld = persistentAtleta.getIdInstitucion();
+            Institucion idInstitucionNew = atleta.getIdInstitucion();
             Departamento idDepartamentoOld = persistentAtleta.getIdDepartamento();
             Departamento idDepartamentoNew = atleta.getIdDepartamento();
             Diagnostico idDiagnosticoOld = persistentAtleta.getIdDiagnostico();
             Diagnostico idDiagnosticoNew = atleta.getIdDiagnostico();
-            Tutor idTutor1Old = persistentAtleta.getIdTutor1();
-            Tutor idTutor1New = atleta.getIdTutor1();
-            Tutor idTutor2Old = persistentAtleta.getIdTutor2();
-            Tutor idTutor2New = atleta.getIdTutor2();
             SitioEntrenamiento idSitioEntrenamientoOld = persistentAtleta.getIdSitioEntrenamiento();
             SitioEntrenamiento idSitioEntrenamientoNew = atleta.getIdSitioEntrenamiento();
-            Usuarios idUsuarioIngresoOld = persistentAtleta.getIdUsuarioIngreso();
-            Usuarios idUsuarioIngresoNew = atleta.getIdUsuarioIngreso();
-            Usuarios idUsuarioActualizacionOld = persistentAtleta.getIdUsuarioActualizacion();
-            Usuarios idUsuarioActualizacionNew = atleta.getIdUsuarioActualizacion();
             Estado idEstadoOld = persistentAtleta.getIdEstado();
             Estado idEstadoNew = atleta.getIdEstado();
             List<AtletaDisciplina> atletaDisciplinaListOld = persistentAtleta.getAtletaDisciplinaList();
             List<AtletaDisciplina> atletaDisciplinaListNew = atleta.getAtletaDisciplinaList();
+            List<Tutor> tutorListOld = persistentAtleta.getTutorList();
+            List<Tutor> tutorListNew = atleta.getTutorList();
+            if (idInstitucionNew != null) {
+                idInstitucionNew = em.getReference(idInstitucionNew.getClass(), idInstitucionNew.getIdInstitucion());
+                atleta.setIdInstitucion(idInstitucionNew);
+            }
             if (idDepartamentoNew != null) {
                 idDepartamentoNew = em.getReference(idDepartamentoNew.getClass(), idDepartamentoNew.getIdDepartamento());
                 atleta.setIdDepartamento(idDepartamentoNew);
@@ -189,25 +182,9 @@ public class AtletaJpaController implements Serializable {
                 idDiagnosticoNew = em.getReference(idDiagnosticoNew.getClass(), idDiagnosticoNew.getIdDiagnostico());
                 atleta.setIdDiagnostico(idDiagnosticoNew);
             }
-            if (idTutor1New != null) {
-                idTutor1New = em.getReference(idTutor1New.getClass(), idTutor1New.getIdTutor());
-                atleta.setIdTutor1(idTutor1New);
-            }
-            if (idTutor2New != null) {
-                idTutor2New = em.getReference(idTutor2New.getClass(), idTutor2New.getIdTutor());
-                atleta.setIdTutor2(idTutor2New);
-            }
             if (idSitioEntrenamientoNew != null) {
                 idSitioEntrenamientoNew = em.getReference(idSitioEntrenamientoNew.getClass(), idSitioEntrenamientoNew.getIdSitioEntrenamiento());
                 atleta.setIdSitioEntrenamiento(idSitioEntrenamientoNew);
-            }
-            if (idUsuarioIngresoNew != null) {
-                idUsuarioIngresoNew = em.getReference(idUsuarioIngresoNew.getClass(), idUsuarioIngresoNew.getIdUsuario());
-                atleta.setIdUsuarioIngreso(idUsuarioIngresoNew);
-            }
-            if (idUsuarioActualizacionNew != null) {
-                idUsuarioActualizacionNew = em.getReference(idUsuarioActualizacionNew.getClass(), idUsuarioActualizacionNew.getIdUsuario());
-                atleta.setIdUsuarioActualizacion(idUsuarioActualizacionNew);
             }
             if (idEstadoNew != null) {
                 idEstadoNew = em.getReference(idEstadoNew.getClass(), idEstadoNew.getIdEstado());
@@ -220,7 +197,22 @@ public class AtletaJpaController implements Serializable {
             }
             atletaDisciplinaListNew = attachedAtletaDisciplinaListNew;
             atleta.setAtletaDisciplinaList(atletaDisciplinaListNew);
+            List<Tutor> attachedTutorListNew = new ArrayList<Tutor>();
+            for (Tutor tutorListNewTutorToAttach : tutorListNew) {
+                tutorListNewTutorToAttach = em.getReference(tutorListNewTutorToAttach.getClass(), tutorListNewTutorToAttach.getIdTutor());
+                attachedTutorListNew.add(tutorListNewTutorToAttach);
+            }
+            tutorListNew = attachedTutorListNew;
+            atleta.setTutorList(tutorListNew);
             atleta = em.merge(atleta);
+            if (idInstitucionOld != null && !idInstitucionOld.equals(idInstitucionNew)) {
+                idInstitucionOld.getAtletaList().remove(atleta);
+                idInstitucionOld = em.merge(idInstitucionOld);
+            }
+            if (idInstitucionNew != null && !idInstitucionNew.equals(idInstitucionOld)) {
+                idInstitucionNew.getAtletaList().add(atleta);
+                idInstitucionNew = em.merge(idInstitucionNew);
+            }
             if (idDepartamentoOld != null && !idDepartamentoOld.equals(idDepartamentoNew)) {
                 idDepartamentoOld.getAtletaList().remove(atleta);
                 idDepartamentoOld = em.merge(idDepartamentoOld);
@@ -237,22 +229,6 @@ public class AtletaJpaController implements Serializable {
                 idDiagnosticoNew.getAtletaList().add(atleta);
                 idDiagnosticoNew = em.merge(idDiagnosticoNew);
             }
-            if (idTutor1Old != null && !idTutor1Old.equals(idTutor1New)) {
-                idTutor1Old.getAtletaList().remove(atleta);
-                idTutor1Old = em.merge(idTutor1Old);
-            }
-            if (idTutor1New != null && !idTutor1New.equals(idTutor1Old)) {
-                idTutor1New.getAtletaList().add(atleta);
-                idTutor1New = em.merge(idTutor1New);
-            }
-            if (idTutor2Old != null && !idTutor2Old.equals(idTutor2New)) {
-                idTutor2Old.getAtletaList().remove(atleta);
-                idTutor2Old = em.merge(idTutor2Old);
-            }
-            if (idTutor2New != null && !idTutor2New.equals(idTutor2Old)) {
-                idTutor2New.getAtletaList().add(atleta);
-                idTutor2New = em.merge(idTutor2New);
-            }
             if (idSitioEntrenamientoOld != null && !idSitioEntrenamientoOld.equals(idSitioEntrenamientoNew)) {
                 idSitioEntrenamientoOld.getAtletaList().remove(atleta);
                 idSitioEntrenamientoOld = em.merge(idSitioEntrenamientoOld);
@@ -260,22 +236,6 @@ public class AtletaJpaController implements Serializable {
             if (idSitioEntrenamientoNew != null && !idSitioEntrenamientoNew.equals(idSitioEntrenamientoOld)) {
                 idSitioEntrenamientoNew.getAtletaList().add(atleta);
                 idSitioEntrenamientoNew = em.merge(idSitioEntrenamientoNew);
-            }
-            if (idUsuarioIngresoOld != null && !idUsuarioIngresoOld.equals(idUsuarioIngresoNew)) {
-                idUsuarioIngresoOld.getAtletaList().remove(atleta);
-                idUsuarioIngresoOld = em.merge(idUsuarioIngresoOld);
-            }
-            if (idUsuarioIngresoNew != null && !idUsuarioIngresoNew.equals(idUsuarioIngresoOld)) {
-                idUsuarioIngresoNew.getAtletaList().add(atleta);
-                idUsuarioIngresoNew = em.merge(idUsuarioIngresoNew);
-            }
-            if (idUsuarioActualizacionOld != null && !idUsuarioActualizacionOld.equals(idUsuarioActualizacionNew)) {
-                idUsuarioActualizacionOld.getAtletaList().remove(atleta);
-                idUsuarioActualizacionOld = em.merge(idUsuarioActualizacionOld);
-            }
-            if (idUsuarioActualizacionNew != null && !idUsuarioActualizacionNew.equals(idUsuarioActualizacionOld)) {
-                idUsuarioActualizacionNew.getAtletaList().add(atleta);
-                idUsuarioActualizacionNew = em.merge(idUsuarioActualizacionNew);
             }
             if (idEstadoOld != null && !idEstadoOld.equals(idEstadoNew)) {
                 idEstadoOld.getAtletaList().remove(atleta);
@@ -302,6 +262,23 @@ public class AtletaJpaController implements Serializable {
                     }
                 }
             }
+            for (Tutor tutorListOldTutor : tutorListOld) {
+                if (!tutorListNew.contains(tutorListOldTutor)) {
+                    tutorListOldTutor.setIdAtleta(null);
+                    tutorListOldTutor = em.merge(tutorListOldTutor);
+                }
+            }
+            for (Tutor tutorListNewTutor : tutorListNew) {
+                if (!tutorListOld.contains(tutorListNewTutor)) {
+                    Atleta oldIdAtletaOfTutorListNewTutor = tutorListNewTutor.getIdAtleta();
+                    tutorListNewTutor.setIdAtleta(atleta);
+                    tutorListNewTutor = em.merge(tutorListNewTutor);
+                    if (oldIdAtletaOfTutorListNewTutor != null && !oldIdAtletaOfTutorListNewTutor.equals(atleta)) {
+                        oldIdAtletaOfTutorListNewTutor.getTutorList().remove(tutorListNewTutor);
+                        oldIdAtletaOfTutorListNewTutor = em.merge(oldIdAtletaOfTutorListNewTutor);
+                    }
+                }
+            }
             utx.commit();
         } catch (Exception ex) {
             try {
@@ -311,7 +288,7 @@ public class AtletaJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = atleta.getIdAtleta();
+                String id = atleta.getIdAtleta();
                 if (findAtleta(id) == null) {
                     throw new NonexistentEntityException("The atleta with id " + id + " no longer exists.");
                 }
@@ -324,7 +301,7 @@ public class AtletaJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws NonexistentEntityException, RollbackFailureException, Exception {
+    public void destroy(String id) throws NonexistentEntityException, RollbackFailureException, Exception {
         EntityManager em = null;
         try {
             utx.begin();
@@ -336,6 +313,11 @@ public class AtletaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The atleta with id " + id + " no longer exists.", enfe);
             }
+            Institucion idInstitucion = atleta.getIdInstitucion();
+            if (idInstitucion != null) {
+                idInstitucion.getAtletaList().remove(atleta);
+                idInstitucion = em.merge(idInstitucion);
+            }
             Departamento idDepartamento = atleta.getIdDepartamento();
             if (idDepartamento != null) {
                 idDepartamento.getAtletaList().remove(atleta);
@@ -346,30 +328,10 @@ public class AtletaJpaController implements Serializable {
                 idDiagnostico.getAtletaList().remove(atleta);
                 idDiagnostico = em.merge(idDiagnostico);
             }
-            Tutor idTutor1 = atleta.getIdTutor1();
-            if (idTutor1 != null) {
-                idTutor1.getAtletaList().remove(atleta);
-                idTutor1 = em.merge(idTutor1);
-            }
-            Tutor idTutor2 = atleta.getIdTutor2();
-            if (idTutor2 != null) {
-                idTutor2.getAtletaList().remove(atleta);
-                idTutor2 = em.merge(idTutor2);
-            }
             SitioEntrenamiento idSitioEntrenamiento = atleta.getIdSitioEntrenamiento();
             if (idSitioEntrenamiento != null) {
                 idSitioEntrenamiento.getAtletaList().remove(atleta);
                 idSitioEntrenamiento = em.merge(idSitioEntrenamiento);
-            }
-            Usuarios idUsuarioIngreso = atleta.getIdUsuarioIngreso();
-            if (idUsuarioIngreso != null) {
-                idUsuarioIngreso.getAtletaList().remove(atleta);
-                idUsuarioIngreso = em.merge(idUsuarioIngreso);
-            }
-            Usuarios idUsuarioActualizacion = atleta.getIdUsuarioActualizacion();
-            if (idUsuarioActualizacion != null) {
-                idUsuarioActualizacion.getAtletaList().remove(atleta);
-                idUsuarioActualizacion = em.merge(idUsuarioActualizacion);
             }
             Estado idEstado = atleta.getIdEstado();
             if (idEstado != null) {
@@ -380,6 +342,11 @@ public class AtletaJpaController implements Serializable {
             for (AtletaDisciplina atletaDisciplinaListAtletaDisciplina : atletaDisciplinaList) {
                 atletaDisciplinaListAtletaDisciplina.setIdAtleta(null);
                 atletaDisciplinaListAtletaDisciplina = em.merge(atletaDisciplinaListAtletaDisciplina);
+            }
+            List<Tutor> tutorList = atleta.getTutorList();
+            for (Tutor tutorListTutor : tutorList) {
+                tutorListTutor.setIdAtleta(null);
+                tutorListTutor = em.merge(tutorListTutor);
             }
             em.remove(atleta);
             utx.commit();
@@ -421,7 +388,7 @@ public class AtletaJpaController implements Serializable {
         }
     }
 
-    public Atleta findAtleta(Integer id) {
+    public Atleta findAtleta(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Atleta.class, id);

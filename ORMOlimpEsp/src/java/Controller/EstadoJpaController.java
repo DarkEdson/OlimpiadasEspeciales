@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Entities.Atleta;
 import Entities.Diagnostico;
+import Entities.Programas;
 import Entities.Roles;
 import Entities.Institucion;
 import Entities.SitioEntrenamiento;
@@ -36,7 +37,7 @@ import javax.transaction.UserTransaction;
  */
 public class EstadoJpaController implements Serializable {
 
-    private static final long serialVersionUID = -3820186969823606166L;
+    private static final long serialVersionUID = 6420677221009096724L;
 
     public EstadoJpaController() {
         this.utx = utx;
@@ -58,6 +59,9 @@ public class EstadoJpaController implements Serializable {
         }
         if (estado.getDiagnosticoList() == null) {
             estado.setDiagnosticoList(new ArrayList<Diagnostico>());
+        }
+        if (estado.getProgramasList() == null) {
+            estado.setProgramasList(new ArrayList<Programas>());
         }
         if (estado.getRolesList() == null) {
             estado.setRolesList(new ArrayList<Roles>());
@@ -102,6 +106,12 @@ public class EstadoJpaController implements Serializable {
                 attachedDiagnosticoList.add(diagnosticoListDiagnosticoToAttach);
             }
             estado.setDiagnosticoList(attachedDiagnosticoList);
+            List<Programas> attachedProgramasList = new ArrayList<Programas>();
+            for (Programas programasListProgramasToAttach : estado.getProgramasList()) {
+                programasListProgramasToAttach = em.getReference(programasListProgramasToAttach.getClass(), programasListProgramasToAttach.getIdPrograma());
+                attachedProgramasList.add(programasListProgramasToAttach);
+            }
+            estado.setProgramasList(attachedProgramasList);
             List<Roles> attachedRolesList = new ArrayList<Roles>();
             for (Roles rolesListRolesToAttach : estado.getRolesList()) {
                 rolesListRolesToAttach = em.getReference(rolesListRolesToAttach.getClass(), rolesListRolesToAttach.getIdRol());
@@ -110,7 +120,7 @@ public class EstadoJpaController implements Serializable {
             estado.setRolesList(attachedRolesList);
             List<Institucion> attachedInstitucionList = new ArrayList<Institucion>();
             for (Institucion institucionListInstitucionToAttach : estado.getInstitucionList()) {
-                institucionListInstitucionToAttach = em.getReference(institucionListInstitucionToAttach.getClass(), institucionListInstitucionToAttach.getIdIntitucion());
+                institucionListInstitucionToAttach = em.getReference(institucionListInstitucionToAttach.getClass(), institucionListInstitucionToAttach.getIdInstitucion());
                 attachedInstitucionList.add(institucionListInstitucionToAttach);
             }
             estado.setInstitucionList(attachedInstitucionList);
@@ -170,6 +180,15 @@ public class EstadoJpaController implements Serializable {
                 if (oldIdEstadoOfDiagnosticoListDiagnostico != null) {
                     oldIdEstadoOfDiagnosticoListDiagnostico.getDiagnosticoList().remove(diagnosticoListDiagnostico);
                     oldIdEstadoOfDiagnosticoListDiagnostico = em.merge(oldIdEstadoOfDiagnosticoListDiagnostico);
+                }
+            }
+            for (Programas programasListProgramas : estado.getProgramasList()) {
+                Estado oldIdEstadoOfProgramasListProgramas = programasListProgramas.getIdEstado();
+                programasListProgramas.setIdEstado(estado);
+                programasListProgramas = em.merge(programasListProgramas);
+                if (oldIdEstadoOfProgramasListProgramas != null) {
+                    oldIdEstadoOfProgramasListProgramas.getProgramasList().remove(programasListProgramas);
+                    oldIdEstadoOfProgramasListProgramas = em.merge(oldIdEstadoOfProgramasListProgramas);
                 }
             }
             for (Roles rolesListRoles : estado.getRolesList()) {
@@ -262,6 +281,8 @@ public class EstadoJpaController implements Serializable {
             List<Atleta> atletaListNew = estado.getAtletaList();
             List<Diagnostico> diagnosticoListOld = persistentEstado.getDiagnosticoList();
             List<Diagnostico> diagnosticoListNew = estado.getDiagnosticoList();
+            List<Programas> programasListOld = persistentEstado.getProgramasList();
+            List<Programas> programasListNew = estado.getProgramasList();
             List<Roles> rolesListOld = persistentEstado.getRolesList();
             List<Roles> rolesListNew = estado.getRolesList();
             List<Institucion> institucionListOld = persistentEstado.getInstitucionList();
@@ -297,6 +318,13 @@ public class EstadoJpaController implements Serializable {
             }
             diagnosticoListNew = attachedDiagnosticoListNew;
             estado.setDiagnosticoList(diagnosticoListNew);
+            List<Programas> attachedProgramasListNew = new ArrayList<Programas>();
+            for (Programas programasListNewProgramasToAttach : programasListNew) {
+                programasListNewProgramasToAttach = em.getReference(programasListNewProgramasToAttach.getClass(), programasListNewProgramasToAttach.getIdPrograma());
+                attachedProgramasListNew.add(programasListNewProgramasToAttach);
+            }
+            programasListNew = attachedProgramasListNew;
+            estado.setProgramasList(programasListNew);
             List<Roles> attachedRolesListNew = new ArrayList<Roles>();
             for (Roles rolesListNewRolesToAttach : rolesListNew) {
                 rolesListNewRolesToAttach = em.getReference(rolesListNewRolesToAttach.getClass(), rolesListNewRolesToAttach.getIdRol());
@@ -306,7 +334,7 @@ public class EstadoJpaController implements Serializable {
             estado.setRolesList(rolesListNew);
             List<Institucion> attachedInstitucionListNew = new ArrayList<Institucion>();
             for (Institucion institucionListNewInstitucionToAttach : institucionListNew) {
-                institucionListNewInstitucionToAttach = em.getReference(institucionListNewInstitucionToAttach.getClass(), institucionListNewInstitucionToAttach.getIdIntitucion());
+                institucionListNewInstitucionToAttach = em.getReference(institucionListNewInstitucionToAttach.getClass(), institucionListNewInstitucionToAttach.getIdInstitucion());
                 attachedInstitucionListNew.add(institucionListNewInstitucionToAttach);
             }
             institucionListNew = attachedInstitucionListNew;
@@ -395,6 +423,23 @@ public class EstadoJpaController implements Serializable {
                     if (oldIdEstadoOfDiagnosticoListNewDiagnostico != null && !oldIdEstadoOfDiagnosticoListNewDiagnostico.equals(estado)) {
                         oldIdEstadoOfDiagnosticoListNewDiagnostico.getDiagnosticoList().remove(diagnosticoListNewDiagnostico);
                         oldIdEstadoOfDiagnosticoListNewDiagnostico = em.merge(oldIdEstadoOfDiagnosticoListNewDiagnostico);
+                    }
+                }
+            }
+            for (Programas programasListOldProgramas : programasListOld) {
+                if (!programasListNew.contains(programasListOldProgramas)) {
+                    programasListOldProgramas.setIdEstado(null);
+                    programasListOldProgramas = em.merge(programasListOldProgramas);
+                }
+            }
+            for (Programas programasListNewProgramas : programasListNew) {
+                if (!programasListOld.contains(programasListNewProgramas)) {
+                    Estado oldIdEstadoOfProgramasListNewProgramas = programasListNewProgramas.getIdEstado();
+                    programasListNewProgramas.setIdEstado(estado);
+                    programasListNewProgramas = em.merge(programasListNewProgramas);
+                    if (oldIdEstadoOfProgramasListNewProgramas != null && !oldIdEstadoOfProgramasListNewProgramas.equals(estado)) {
+                        oldIdEstadoOfProgramasListNewProgramas.getProgramasList().remove(programasListNewProgramas);
+                        oldIdEstadoOfProgramasListNewProgramas = em.merge(oldIdEstadoOfProgramasListNewProgramas);
                     }
                 }
             }
@@ -565,6 +610,11 @@ public class EstadoJpaController implements Serializable {
             for (Diagnostico diagnosticoListDiagnostico : diagnosticoList) {
                 diagnosticoListDiagnostico.setIdEstado(null);
                 diagnosticoListDiagnostico = em.merge(diagnosticoListDiagnostico);
+            }
+            List<Programas> programasList = estado.getProgramasList();
+            for (Programas programasListProgramas : programasList) {
+                programasListProgramas.setIdEstado(null);
+                programasListProgramas = em.merge(programasListProgramas);
             }
             List<Roles> rolesList = estado.getRolesList();
             for (Roles rolesListRoles : rolesList) {

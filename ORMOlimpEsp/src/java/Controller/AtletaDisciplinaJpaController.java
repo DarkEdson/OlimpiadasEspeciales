@@ -15,7 +15,7 @@ import javax.persistence.criteria.Root;
 import Entities.Atleta;
 import Entities.AtletaDisciplina;
 import Entities.Disciplinas;
-import Entities.Institucion;
+import Entities.Programas;
 import Entities.Estado;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -28,8 +28,6 @@ import javax.transaction.UserTransaction;
  * @author axel.medina
  */
 public class AtletaDisciplinaJpaController implements Serializable {
-
-    private static final long serialVersionUID = 2349729552551466947L;
 
     public AtletaDisciplinaJpaController() {
         this.utx = utx;
@@ -57,10 +55,10 @@ public class AtletaDisciplinaJpaController implements Serializable {
                 idDisciplina = em.getReference(idDisciplina.getClass(), idDisciplina.getIdDisciplina());
                 atletaDisciplina.setIdDisciplina(idDisciplina);
             }
-            Institucion idIntitucion = atletaDisciplina.getIdIntitucion();
-            if (idIntitucion != null) {
-                idIntitucion = em.getReference(idIntitucion.getClass(), idIntitucion.getIdIntitucion());
-                atletaDisciplina.setIdIntitucion(idIntitucion);
+            Programas idPrograma = atletaDisciplina.getIdPrograma();
+            if (idPrograma != null) {
+                idPrograma = em.getReference(idPrograma.getClass(), idPrograma.getIdPrograma());
+                atletaDisciplina.setIdPrograma(idPrograma);
             }
             Estado idEstado = atletaDisciplina.getIdEstado();
             if (idEstado != null) {
@@ -76,9 +74,9 @@ public class AtletaDisciplinaJpaController implements Serializable {
                 idDisciplina.getAtletaDisciplinaList().add(atletaDisciplina);
                 idDisciplina = em.merge(idDisciplina);
             }
-            if (idIntitucion != null) {
-                idIntitucion.getAtletaDisciplinaList().add(atletaDisciplina);
-                idIntitucion = em.merge(idIntitucion);
+            if (idPrograma != null) {
+                idPrograma.getAtletaDisciplinaList().add(atletaDisciplina);
+                idPrograma = em.merge(idPrograma);
             }
             if (idEstado != null) {
                 idEstado.getAtletaDisciplinaList().add(atletaDisciplina);
@@ -109,8 +107,8 @@ public class AtletaDisciplinaJpaController implements Serializable {
             Atleta idAtletaNew = atletaDisciplina.getIdAtleta();
             Disciplinas idDisciplinaOld = persistentAtletaDisciplina.getIdDisciplina();
             Disciplinas idDisciplinaNew = atletaDisciplina.getIdDisciplina();
-            Institucion idIntitucionOld = persistentAtletaDisciplina.getIdIntitucion();
-            Institucion idIntitucionNew = atletaDisciplina.getIdIntitucion();
+            Programas idProgramaOld = persistentAtletaDisciplina.getIdPrograma();
+            Programas idProgramaNew = atletaDisciplina.getIdPrograma();
             Estado idEstadoOld = persistentAtletaDisciplina.getIdEstado();
             Estado idEstadoNew = atletaDisciplina.getIdEstado();
             if (idAtletaNew != null) {
@@ -121,9 +119,9 @@ public class AtletaDisciplinaJpaController implements Serializable {
                 idDisciplinaNew = em.getReference(idDisciplinaNew.getClass(), idDisciplinaNew.getIdDisciplina());
                 atletaDisciplina.setIdDisciplina(idDisciplinaNew);
             }
-            if (idIntitucionNew != null) {
-                idIntitucionNew = em.getReference(idIntitucionNew.getClass(), idIntitucionNew.getIdIntitucion());
-                atletaDisciplina.setIdIntitucion(idIntitucionNew);
+            if (idProgramaNew != null) {
+                idProgramaNew = em.getReference(idProgramaNew.getClass(), idProgramaNew.getIdPrograma());
+                atletaDisciplina.setIdPrograma(idProgramaNew);
             }
             if (idEstadoNew != null) {
                 idEstadoNew = em.getReference(idEstadoNew.getClass(), idEstadoNew.getIdEstado());
@@ -146,13 +144,13 @@ public class AtletaDisciplinaJpaController implements Serializable {
                 idDisciplinaNew.getAtletaDisciplinaList().add(atletaDisciplina);
                 idDisciplinaNew = em.merge(idDisciplinaNew);
             }
-            if (idIntitucionOld != null && !idIntitucionOld.equals(idIntitucionNew)) {
-                idIntitucionOld.getAtletaDisciplinaList().remove(atletaDisciplina);
-                idIntitucionOld = em.merge(idIntitucionOld);
+            if (idProgramaOld != null && !idProgramaOld.equals(idProgramaNew)) {
+                idProgramaOld.getAtletaDisciplinaList().remove(atletaDisciplina);
+                idProgramaOld = em.merge(idProgramaOld);
             }
-            if (idIntitucionNew != null && !idIntitucionNew.equals(idIntitucionOld)) {
-                idIntitucionNew.getAtletaDisciplinaList().add(atletaDisciplina);
-                idIntitucionNew = em.merge(idIntitucionNew);
+            if (idProgramaNew != null && !idProgramaNew.equals(idProgramaOld)) {
+                idProgramaNew.getAtletaDisciplinaList().add(atletaDisciplina);
+                idProgramaNew = em.merge(idProgramaNew);
             }
             if (idEstadoOld != null && !idEstadoOld.equals(idEstadoNew)) {
                 idEstadoOld.getAtletaDisciplinaList().remove(atletaDisciplina);
@@ -206,10 +204,10 @@ public class AtletaDisciplinaJpaController implements Serializable {
                 idDisciplina.getAtletaDisciplinaList().remove(atletaDisciplina);
                 idDisciplina = em.merge(idDisciplina);
             }
-            Institucion idIntitucion = atletaDisciplina.getIdIntitucion();
-            if (idIntitucion != null) {
-                idIntitucion.getAtletaDisciplinaList().remove(atletaDisciplina);
-                idIntitucion = em.merge(idIntitucion);
+            Programas idPrograma = atletaDisciplina.getIdPrograma();
+            if (idPrograma != null) {
+                idPrograma.getAtletaDisciplinaList().remove(atletaDisciplina);
+                idPrograma = em.merge(idPrograma);
             }
             Estado idEstado = atletaDisciplina.getIdEstado();
             if (idEstado != null) {

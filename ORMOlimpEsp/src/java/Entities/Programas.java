@@ -28,59 +28,50 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author axel.medina
  */
 @Entity
-@Table(name = "diagnostico")
+@Table(name = "programas")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Diagnostico.findAll", query = "SELECT d FROM Diagnostico d")
-    , @NamedQuery(name = "Diagnostico.findByIdDiagnostico", query = "SELECT d FROM Diagnostico d WHERE d.idDiagnostico = :idDiagnostico")
-    , @NamedQuery(name = "Diagnostico.findByDiagnostico", query = "SELECT d FROM Diagnostico d WHERE d.diagnostico = :diagnostico")})
-public class Diagnostico implements Serializable {
+    @NamedQuery(name = "Programas.findAll", query = "SELECT p FROM Programas p")
+    , @NamedQuery(name = "Programas.findByIdPrograma", query = "SELECT p FROM Programas p WHERE p.idPrograma = :idPrograma")
+    , @NamedQuery(name = "Programas.findByPrograma", query = "SELECT p FROM Programas p WHERE p.programa = :programa")})
+public class Programas implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "ID_DIAGNOSTICO")
-    private Integer idDiagnostico;
+    @Column(name = "ID_PROGRAMA")
+    private Integer idPrograma;
     @Size(max = 100)
-    @Column(name = "DIAGNOSTICO")
-    private String diagnostico;
-    @OneToMany(mappedBy = "idDiagnostico")
-    private List<Atleta> atletaList;
+    @Column(name = "PROGRAMA")
+    private String programa;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
+    @OneToMany(mappedBy = "idPrograma")
+    private List<AtletaDisciplina> atletaDisciplinaList;
 
-    public Diagnostico() {
+    public Programas() {
     }
 
-    public Diagnostico(Integer idDiagnostico) {
-        this.idDiagnostico = idDiagnostico;
+    public Programas(Integer idPrograma) {
+        this.idPrograma = idPrograma;
     }
 
-    public Integer getIdDiagnostico() {
-        return idDiagnostico;
+    public Integer getIdPrograma() {
+        return idPrograma;
     }
 
-    public void setIdDiagnostico(Integer idDiagnostico) {
-        this.idDiagnostico = idDiagnostico;
+    public void setIdPrograma(Integer idPrograma) {
+        this.idPrograma = idPrograma;
     }
 
-    public String getDiagnostico() {
-        return diagnostico;
+    public String getPrograma() {
+        return programa;
     }
 
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
-    }
-
-    @XmlTransient
-    public List<Atleta> getAtletaList() {
-        return atletaList;
-    }
-
-    public void setAtletaList(List<Atleta> atletaList) {
-        this.atletaList = atletaList;
+    public void setPrograma(String programa) {
+        this.programa = programa;
     }
 
     public Estado getIdEstado() {
@@ -91,21 +82,30 @@ public class Diagnostico implements Serializable {
         this.idEstado = idEstado;
     }
 
+    @XmlTransient
+    public List<AtletaDisciplina> getAtletaDisciplinaList() {
+        return atletaDisciplinaList;
+    }
+
+    public void setAtletaDisciplinaList(List<AtletaDisciplina> atletaDisciplinaList) {
+        this.atletaDisciplinaList = atletaDisciplinaList;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (idDiagnostico != null ? idDiagnostico.hashCode() : 0);
+        hash += (idPrograma != null ? idPrograma.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Diagnostico)) {
+        if (!(object instanceof Programas)) {
             return false;
         }
-        Diagnostico other = (Diagnostico) object;
-        if ((this.idDiagnostico == null && other.idDiagnostico != null) || (this.idDiagnostico != null && !this.idDiagnostico.equals(other.idDiagnostico))) {
+        Programas other = (Programas) object;
+        if ((this.idPrograma == null && other.idPrograma != null) || (this.idPrograma != null && !this.idPrograma.equals(other.idPrograma))) {
             return false;
         }
         return true;
@@ -113,7 +113,7 @@ public class Diagnostico implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.Diagnostico[ idDiagnostico=" + idDiagnostico + " ]";
+        return "Entities.Programas[ idPrograma=" + idPrograma + " ]";
     }
     
 }
