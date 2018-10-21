@@ -1,2 +1,1 @@
 BeanInsert.BeanRoles
-BeanInsert.BeanInsertRoles

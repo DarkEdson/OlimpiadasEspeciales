@@ -120,7 +120,7 @@ public class EstadoJpaController implements Serializable {
             estado.setRolesList(attachedRolesList);
             List<Institucion> attachedInstitucionList = new ArrayList<Institucion>();
             for (Institucion institucionListInstitucionToAttach : estado.getInstitucionList()) {
-                institucionListInstitucionToAttach = em.getReference(institucionListInstitucionToAttach.getClass(), institucionListInstitucionToAttach.getIdInstitucion());
+                institucionListInstitucionToAttach = em.getReference(institucionListInstitucionToAttach.getClass(), institucionListInstitucionToAttach.getIdIntitucion());
                 attachedInstitucionList.add(institucionListInstitucionToAttach);
             }
             estado.setInstitucionList(attachedInstitucionList);
@@ -334,7 +334,7 @@ public class EstadoJpaController implements Serializable {
             estado.setRolesList(rolesListNew);
             List<Institucion> attachedInstitucionListNew = new ArrayList<Institucion>();
             for (Institucion institucionListNewInstitucionToAttach : institucionListNew) {
-                institucionListNewInstitucionToAttach = em.getReference(institucionListNewInstitucionToAttach.getClass(), institucionListNewInstitucionToAttach.getIdInstitucion());
+                institucionListNewInstitucionToAttach = em.getReference(institucionListNewInstitucionToAttach.getClass(), institucionListNewInstitucionToAttach.getIdIntitucion());
                 attachedInstitucionListNew.add(institucionListNewInstitucionToAttach);
             }
             institucionListNew = attachedInstitucionListNew;

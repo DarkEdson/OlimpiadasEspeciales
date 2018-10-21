@@ -6,8 +6,10 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,6 +19,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,10 +28,10 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author axel.medina
+ * @author Dark Edson
  */
 @Entity
-@Table(name = "disciplinas")
+@Table(name = "DISCIPLINAS")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Disciplinas.findAll", query = "SELECT d FROM Disciplinas d")
@@ -45,11 +49,11 @@ public class Disciplinas implements Serializable {
     @Size(max = 100)
     @Column(name = "DISCIPLINA")
     private String disciplina;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idDisciplina")
+    private List<AtletaDisciplina> atletaDisciplinaList;
     @JoinColumn(name = "ID_ESTADO", referencedColumnName = "ID_ESTADO")
     @ManyToOne
     private Estado idEstado;
-    @OneToMany(mappedBy = "idDisciplina")
-    private List<AtletaDisciplina> atletaDisciplinaList;
 
     public Disciplinas() {
     }
@@ -74,14 +78,6 @@ public class Disciplinas implements Serializable {
         this.disciplina = disciplina;
     }
 
-    public Estado getIdEstado() {
-        return idEstado;
-    }
-
-    public void setIdEstado(Estado idEstado) {
-        this.idEstado = idEstado;
-    }
-
     @XmlTransient
     public List<AtletaDisciplina> getAtletaDisciplinaList() {
         return atletaDisciplinaList;
@@ -89,6 +85,14 @@ public class Disciplinas implements Serializable {
 
     public void setAtletaDisciplinaList(List<AtletaDisciplina> atletaDisciplinaList) {
         this.atletaDisciplinaList = atletaDisciplinaList;
+    }
+
+    public Estado getIdEstado() {
+        return idEstado;
+    }
+
+    public void setIdEstado(Estado idEstado) {
+        this.idEstado = idEstado;
     }
 
     @Override

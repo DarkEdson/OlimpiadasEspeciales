@@ -6,6 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -19,16 +20,19 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author axel.medina
+ * @author Dark Edson
  */
 @Entity
-@Table(name = "roles")
+@Table(name = "ROLES")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Roles.findAll", query = "SELECT r FROM Roles r")
@@ -37,8 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Roles implements Serializable {
 
     private static final long serialVersionUID = 8114563314825458280L;
-
-   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -115,7 +117,7 @@ public class Roles implements Serializable {
 
     @Override
     public String toString() {
-        return "Entities.Roles[ idRol=" + idRol + ", rol=" + rol + ", idEstado=" + idEstado + " ]";
+        return "Entities.Roles[ idRol=" + idRol + " ]";
     }
     
 }

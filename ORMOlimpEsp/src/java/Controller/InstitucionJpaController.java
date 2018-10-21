@@ -64,8 +64,8 @@ public class InstitucionJpaController implements Serializable {
                 idEstado = em.merge(idEstado);
             }
             for (Atleta atletaListAtleta : institucion.getAtletaList()) {
-                Institucion oldIdInstitucionOfAtletaListAtleta = atletaListAtleta.getIdInstitucion();
-                atletaListAtleta.setIdInstitucion(institucion);
+                Institucion oldIdInstitucionOfAtletaListAtleta = atletaListAtleta.getIdIntitucion();
+                atletaListAtleta.setIdIntitucion(institucion);
                 atletaListAtleta = em.merge(atletaListAtleta);
                 if (oldIdInstitucionOfAtletaListAtleta != null) {
                     oldIdInstitucionOfAtletaListAtleta.getAtletaList().remove(atletaListAtleta);
@@ -92,7 +92,7 @@ public class InstitucionJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Institucion persistentInstitucion = em.find(Institucion.class, institucion.getIdInstitucion());
+            Institucion persistentInstitucion = em.find(Institucion.class, institucion.getIdIntitucion());
             Estado idEstadoOld = persistentInstitucion.getIdEstado();
             Estado idEstadoNew = institucion.getIdEstado();
             List<Atleta> atletaListOld = persistentInstitucion.getAtletaList();
@@ -119,14 +119,14 @@ public class InstitucionJpaController implements Serializable {
             }
             for (Atleta atletaListOldAtleta : atletaListOld) {
                 if (!atletaListNew.contains(atletaListOldAtleta)) {
-                    atletaListOldAtleta.setIdInstitucion(null);
+                    atletaListOldAtleta.setIdIntitucion(null);
                     atletaListOldAtleta = em.merge(atletaListOldAtleta);
                 }
             }
             for (Atleta atletaListNewAtleta : atletaListNew) {
                 if (!atletaListOld.contains(atletaListNewAtleta)) {
-                    Institucion oldIdInstitucionOfAtletaListNewAtleta = atletaListNewAtleta.getIdInstitucion();
-                    atletaListNewAtleta.setIdInstitucion(institucion);
+                    Institucion oldIdInstitucionOfAtletaListNewAtleta = atletaListNewAtleta.getIdIntitucion();
+                    atletaListNewAtleta.setIdIntitucion(institucion);
                     atletaListNewAtleta = em.merge(atletaListNewAtleta);
                     if (oldIdInstitucionOfAtletaListNewAtleta != null && !oldIdInstitucionOfAtletaListNewAtleta.equals(institucion)) {
                         oldIdInstitucionOfAtletaListNewAtleta.getAtletaList().remove(atletaListNewAtleta);
@@ -143,7 +143,7 @@ public class InstitucionJpaController implements Serializable {
             }
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = institucion.getIdInstitucion();
+                Integer id = institucion.getIdIntitucion();
                 if (findInstitucion(id) == null) {
                     throw new NonexistentEntityException("The institucion with id " + id + " no longer exists.");
                 }
@@ -164,7 +164,7 @@ public class InstitucionJpaController implements Serializable {
             Institucion institucion;
             try {
                 institucion = em.getReference(Institucion.class, id);
-                institucion.getIdInstitucion();
+                institucion.getIdIntitucion();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The institucion with id " + id + " no longer exists.", enfe);
             }
@@ -175,7 +175,7 @@ public class InstitucionJpaController implements Serializable {
             }
             List<Atleta> atletaList = institucion.getAtletaList();
             for (Atleta atletaListAtleta : atletaList) {
-                atletaListAtleta.setIdInstitucion(null);
+                atletaListAtleta.setIdIntitucion(null);
                 atletaListAtleta = em.merge(atletaListAtleta);
             }
             em.remove(institucion);

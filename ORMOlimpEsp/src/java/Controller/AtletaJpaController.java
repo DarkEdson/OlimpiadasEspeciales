@@ -56,10 +56,10 @@ public class AtletaJpaController implements Serializable {
         try {
             utx.begin();
             em = getEntityManager();
-            Institucion idInstitucion = atleta.getIdInstitucion();
+            Institucion idInstitucion = atleta.getIdIntitucion();
             if (idInstitucion != null) {
-                idInstitucion = em.getReference(idInstitucion.getClass(), idInstitucion.getIdInstitucion());
-                atleta.setIdInstitucion(idInstitucion);
+                idInstitucion = em.getReference(idInstitucion.getClass(), idInstitucion.getIdIntitucion());
+                atleta.setIdIntitucion(idInstitucion);
             }
             Departamento idDepartamento = atleta.getIdDepartamento();
             if (idDepartamento != null) {
@@ -156,8 +156,8 @@ public class AtletaJpaController implements Serializable {
             utx.begin();
             em = getEntityManager();
             Atleta persistentAtleta = em.find(Atleta.class, atleta.getIdAtleta());
-            Institucion idInstitucionOld = persistentAtleta.getIdInstitucion();
-            Institucion idInstitucionNew = atleta.getIdInstitucion();
+            Institucion idInstitucionOld = persistentAtleta.getIdIntitucion();
+            Institucion idInstitucionNew = atleta.getIdIntitucion();
             Departamento idDepartamentoOld = persistentAtleta.getIdDepartamento();
             Departamento idDepartamentoNew = atleta.getIdDepartamento();
             Diagnostico idDiagnosticoOld = persistentAtleta.getIdDiagnostico();
@@ -171,8 +171,8 @@ public class AtletaJpaController implements Serializable {
             List<Tutor> tutorListOld = persistentAtleta.getTutorList();
             List<Tutor> tutorListNew = atleta.getTutorList();
             if (idInstitucionNew != null) {
-                idInstitucionNew = em.getReference(idInstitucionNew.getClass(), idInstitucionNew.getIdInstitucion());
-                atleta.setIdInstitucion(idInstitucionNew);
+                idInstitucionNew = em.getReference(idInstitucionNew.getClass(), idInstitucionNew.getIdIntitucion());
+                atleta.setIdIntitucion(idInstitucionNew);
             }
             if (idDepartamentoNew != null) {
                 idDepartamentoNew = em.getReference(idDepartamentoNew.getClass(), idDepartamentoNew.getIdDepartamento());
@@ -313,7 +313,7 @@ public class AtletaJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The atleta with id " + id + " no longer exists.", enfe);
             }
-            Institucion idInstitucion = atleta.getIdInstitucion();
+            Institucion idInstitucion = atleta.getIdIntitucion();
             if (idInstitucion != null) {
                 idInstitucion.getAtletaList().remove(atleta);
                 idInstitucion = em.merge(idInstitucion);

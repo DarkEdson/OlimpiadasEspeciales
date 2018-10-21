@@ -10,6 +10,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="css/default.css"/>
         <h:outputStylesheet name="css/cssLayout.css"/>
+        <script src="https://code.jquery.com/jquery-git.js"></script>
         <title>Olimpiadas Especiales</title>
     </h:head>
 
@@ -28,8 +29,8 @@
                         </p:submenu>
 
                         <p:submenu label="Reporteria"  icon="ui-icon-document">
-                            <p:menuitem value="Por Atletas" url="#" icon="ui-icon-arrowreturnthick-1-w" />
-                            <p:menuitem value="Por Disciplinas" url="#" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Por Atletas" url="ViewAtletaReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Por Disciplinas" url="ViewDisciplinasReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
                         
                         </p:submenu>
 
@@ -62,15 +63,20 @@
         </div>
 
         <div id="bottom">
+            
             <ui:insert name="bottom">
+                <p:graphicImage url="../resources/images/logoOSGT.png" style="float: left; height: 75px; width: 75px; margin-left: 150px; margin-right: -150px;"></p:graphicImage>
                 <center>
                     <p:outputLabel value="Derechos Reservados @OE 2018"/> 
                 </center>
-                <div id="rightb" style="position: relative; right: 0">
+                <div id="rightb" style="position: relative; right: 0; margin-left: 280px;">
                     
                     <p:outputLabel value="Usuario: "/><p:outputLabel value="#{sessionScope.userName}"/>
+                    <p:graphicImage url="../resources/images/logoUMG.png" style="float: right; height: 75px; width: 75px; margin-right: 150px; "></p:graphicImage>
                 </div>
+                
             </ui:insert>
+            
         </div>
 
     </h:body>

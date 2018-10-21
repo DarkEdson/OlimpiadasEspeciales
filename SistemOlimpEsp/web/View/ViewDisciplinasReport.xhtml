@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <body>
+
+        <ui:composition template="./Main.xhtml">
+
+            <ui:define name="content">
+                <h:form>
+                    <center>
+                    <h2> <h:outputLabel style=" text-align: center" value="Listado de Disciplinas"/></h2>
+                    </center>
+                    <p:dataTable id="tbl" var="disciplina" value="#{beanDisciplinas.disciplinas}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                 paginator="true" rows="10" style="margin-bottom:20px">
+                  
+                        <p:column filterBy="#{disciplina.idDisciplina}" filterStyle="width:100px;" filterMatchMode="contains">
+                            <f:facet name="header">
+                                <h:outputText value="Codigo" />
+                            </f:facet>
+                            <h:outputText value="#{disciplina.idDisciplina}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Nombre Disciplina"/>
+                            </f:facet>
+                            <h:outputText value="#{disciplina.disciplina}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="Estado" />
+                            </f:facet>
+                            <h:outputText value="#{disciplina.idEstado.estado}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <h3>Generar Reporte</h3>
+                    <h:commandLink>
+                            <h:commandLink>
+                                <p:outputLabel value="Excel"/>
+                                <p:graphicImage name="images/xls.png" width="24"/>
+                                <p:dataExporter type="xls" target="tbl" fileName="Disciplinas" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:outputLabel value="PDF"/>
+                                <p:graphicImage name="images/pdf.png" width="24"/>
+                                <p:dataExporter type="pdf" target="tbl" fileName="Disciplinas"/>
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:outputLabel value="CSV"/>
+                                <p:graphicImage name="images/csv.png" width="24"/>
+                                <p:dataExporter type="csv" target="tbl" fileName="Disciplinas" />
+                            </h:commandLink>
+
+                            <h:commandLink>
+                                <p:outputLabel value="XML"/>
+                                <p:graphicImage name="images/xml.png" width="24"/>
+                                <p:dataExporter type="xml" target="tbl" fileName="Disciplinas" />
+                            </h:commandLink>
+                    </h:commandLink>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

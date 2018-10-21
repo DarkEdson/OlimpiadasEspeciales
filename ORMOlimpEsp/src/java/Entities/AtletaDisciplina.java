@@ -6,6 +6,7 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,14 +18,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author axel.medina
+ * @author Dark Edson
  */
 @Entity
-@Table(name = "atleta_disciplina")
+@Table(name = "ATLETA_DISCIPLINA")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "AtletaDisciplina.findAll", query = "SELECT a FROM AtletaDisciplina a")
@@ -38,10 +42,10 @@ public class AtletaDisciplina implements Serializable {
     @Column(name = "ID_ATLETA_DISCIPLINA")
     private Integer idAtletaDisciplina;
     @JoinColumn(name = "ID_ATLETA", referencedColumnName = "ID_ATLETA")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Atleta idAtleta;
     @JoinColumn(name = "ID_DISCIPLINA", referencedColumnName = "ID_DISCIPLINA")
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Disciplinas idDisciplina;
     @JoinColumn(name = "ID_PROGRAMA", referencedColumnName = "ID_PROGRAMA")
     @ManyToOne

@@ -5,23 +5,41 @@
  */
 package MagedBeans;
 
+import Controller.ControllerCrud;
 import Controller.DisciplinasJpaController;
 import Entities.Disciplinas;
 import java.io.Serializable;
 import java.util.List;
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author axel.medina
  */
-@Named(value = "beanDisciplinas")
-@Dependent
+@ManagedBean(name="beanDisciplinas")
+@ViewScoped
 public class BeanDisciplinas implements Serializable {
 
     private static final long serialVersionUID = 7346487991662685120L;
-    DisciplinasJpaController ControlDisciplinas = new DisciplinasJpaController();
+    
+    DisciplinasJpaController ControlTabla;
+    ControllerCrud controlCrud;//REFERENCIA AL CONTROLLER ESTANDAR PARA EL CRUD
+    /*VARIABLE PARA CONTENIDO DE LA FILA SELECCIONADA*/
+    private Disciplinas selectedDisciplina;
+    /*VARIABLES PARA EL FORMULARIO*/
+
+
+    /**
+     * Creates a new instance of BeanInsertRoles
+     */
+     @PostConstruct
+    public void initBeanAtletas() {
+        this.controlCrud = new ControllerCrud();//REFERENCIA AL CONTROLLER ESTANDAR PARA EL CRUD
+         this.ControlTabla = new DisciplinasJpaController();//REFERENCIA PARA EL CONTENIDO DE LA DATATABLE
+    }
+    
 
     /**
      * Creates a new instance of BeanDiciplinas
@@ -30,6 +48,6 @@ public class BeanDisciplinas implements Serializable {
     }
 
     public List<Disciplinas> getDisciplinas() {
-        return ControlDisciplinas.findDisciplinasEntities();
+        return ControlTabla.findDisciplinasEntities();
     }
 }
