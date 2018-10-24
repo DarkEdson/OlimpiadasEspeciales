@@ -13,47 +13,127 @@
 
     </h:head>
     <h:body>
-      <ui:composition template="Main.xhtml">
+        <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
-         <p:growl id="growl" showDetail="true" sticky="true" />
-        <p:panel  header="Institucion"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+                
+                <p:growl id="msgs" showDetail="true" />
+                <p:panel  header="Mantenimiento institucion"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
-            <h:form styleClass="form-horizontal">
+                    <h:form styleClass="form-horizontal" id="formTable">
 
+                        <p:commandButton update=":formInsert:InsertDetail" icon="ui-icon-plus" value="Agregar registro" styleClass="ui-priority-primary" style="float:right;"
+                                         actionListener="#{beanInstitucion.formClear()}"  onclick="PF('InsertDialog').show();" title="Agregar"/>
 
-                <h:panelGrid columns="2" cellpadding="1" >
-            
-                    <p:spacer />
+                        <p:dataTable id="basicDT" var="tabla" value="#{beanInstitucion.tabla}"  paginator="true" rows="5">
+                            <p:column headerText="Id" >
+                                <h:outputText value="#{tabla.idIntitucion}" />
+                            </p:column>
 
-                    <h:outputLabel for="descripcion" value=" " />
-                    <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
-                 	<p:spacer />	<p:spacer />	
-                    <f:facet name="footer">
-                         <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
-                            <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
-                            <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
-                            <p:separator />
-                        </p:splitButton>   
-                    </f:facet> 
-                </h:panelGrid>
-                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{tabla.institucion}" />
+                            </p:column>
 
-            </h:form>
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{tabla.idEstado.estado}" />
+                            </p:column>
 
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formUpdate:UpdateDetail"  oncomplete="PF('UpdateDialog').show()" icon="ui-icon-pencil" title="Modificar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanInstitucion.selectedTablaUpdate}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formDelete:DeleteDetail"  oncomplete="PF('DeleteDialog').show()"  icon="ui-icon-closethick" title="Eliminar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanInstitucion.selectedTablaDelete}" />
+                                </p:commandButton>
+                            </p:column>
 
-            <p:dataTable var="institucion" value="#{beanInstitucion.institucion}"  paginator="false">
-                <p:column headerText="Id">
-                    <h:outputText value="#{institucion.idIntitucion}" />
-                </p:column>
+                        </p:dataTable>
 
-                <p:column headerText="Descripcion">
-                    <h:outputText value="#{institucion.nombreInstitucion}" />
-                </p:column>
-            </p:dataTable>
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formInsert">
+                        <p:dialog header="Agregar institucion" widgetVar="InsertDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="InsertDetail" style="text-align:center;">
+                                <h:panelGrid columns="2" cellpadding="1">
 
-        </p:panel>
-                  </ui:define>
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTInsert" var="" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcionInsert" value="#{beanInstitucion.descripcionInsert}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
+
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanInstitucion.estadoInsert}" >
+                                                <f:selectItems value="#{beanInstitucion.listEstado}" var="estados" itemLabel="#{estados.estado}"  itemValue="#{estados.idEstado}" />
+                                            </h:selectOneMenu>   
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-disk" value="Guardar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanInstitucion.setInsert()}"  onclick="PF('InsertDialog').hidden();" title="Guardar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formUpdate">
+                        <p:dialog header="Modificar institucion" widgetVar="UpdateDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="UpdateDetail" style="text-align:center;">
+                                <h:outputText value="#{beanInstitucion.selectedTablaUpdate.idIntitucion} - #{beanInstitucion.selectedTablaUpdate.institucion}" style="display:none"/>
+
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTUpdate" var="rol" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcion" value="#{beanInstitucion.descripcionUpdate}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
+
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanInstitucion.estadoUpdate}" >
+                                                <f:selectItems value="#{beanInstitucion.listEstadoUpdate}" var="estadosUpdate" itemLabel="#{estadosUpdate.estado}"  itemValue="#{estadosUpdate.idEstado}" />
+                                            </h:selectOneMenu>  
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-pencil" value="Modificar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanInstitucion.setUpdate()}"  onclick="PF('UpdateDialog').hidden();" title="Modificar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formDelete">
+                        <p:dialog header="Eliminar institucion" widgetVar="DeleteDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="DeleteDetail" style="text-align:center;">
+
+                                <h:panelGrid columns="2" cellpadding="1">
+
+                                    <p:dataTable id="basicDTDelete" var="rol" value="#{beanInstitucion.selectedTablaDelete}"  paginator="false" rows="2">
+                                        
+                                        <p:column headerText="Descripcion">
+                                            <h:outputText value="#{beanInstitucion.selectedTablaDelete.institucion}" />
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-closethick" value="Eliminar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanInstitucion.setDelete()}"  onclick="PF('DeleteDialog').hidden();" title="Eliminar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <h:outputText value="#{beanInstitucion.selectedTablaDelete.idIntitucion} - #{beanInstitucion.selectedTablaDelete.institucion}" style="display:none"/>
+
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+
+                </p:panel>
+            </ui:define>
 
         </ui:composition>
     </h:body>

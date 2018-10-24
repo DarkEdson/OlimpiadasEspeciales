@@ -13,51 +13,127 @@
 
     </h:head>
     <h:body>
-               <ui:composition template="Main.xhtml">
+        <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
                 
+                <p:growl id="msgs" showDetail="true" />
+                <p:panel  header="Mantenimiento diagnostico"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
+                    <h:form styleClass="form-horizontal" id="formTable">
 
-         <p:growl id="growl" showDetail="true" sticky="true" />
-        <p:panel  header="Diagnostico"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+                        <p:commandButton update=":formInsert:InsertDetail" icon="ui-icon-plus" value="Agregar registro" styleClass="ui-priority-primary" style="float:right;"
+                                         actionListener="#{beanDiagnostico.formClear()}"  onclick="PF('InsertDialog').show();" title="Agregar"/>
 
-            <h:form styleClass="form-horizontal">
+                        <p:dataTable id="basicDT" var="tabla" value="#{beanDiagnostico.tabla}"  paginator="true" rows="5">
+                            <p:column headerText="Id" >
+                                <h:outputText value="#{tabla.idDiagnostico}" />
+                            </p:column>
 
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{tabla.diagnostico}" />
+                            </p:column>
 
-                <h:panelGrid columns="2" cellpadding="1" >
-            
-                    <p:spacer />
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{tabla.idEstado.estado}" />
+                            </p:column>
 
-                    <h:outputLabel for="descripcion" value=" " />
-                    <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
-                 	<p:spacer />	<p:spacer />	
-                    <f:facet name="footer">
-                         <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
-                            <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
-                            <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
-                            <p:separator />
-                        </p:splitButton>   
-                    </f:facet> 
-                </h:panelGrid>
-                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formUpdate:UpdateDetail"  oncomplete="PF('UpdateDialog').show()" icon="ui-icon-pencil" title="Modificar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanDiagnostico.selectedTablaUpdate}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formDelete:DeleteDetail"  oncomplete="PF('DeleteDialog').show()"  icon="ui-icon-closethick" title="Eliminar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanDiagnostico.selectedTablaDelete}" />
+                                </p:commandButton>
+                            </p:column>
 
-            </h:form>
+                        </p:dataTable>
 
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formInsert">
+                        <p:dialog header="Agregar diagnostico" widgetVar="InsertDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="InsertDetail" style="text-align:center;">
+                                <h:panelGrid columns="2" cellpadding="1">
 
-            <p:dataTable var="diagnostico" value="#{beanDiagnostico.diagnostico}"  paginator="false">
-                <p:column headerText="Id">
-                    <h:outputText value="#{diagnostico.idDiagnostico}" />
-                </p:column>
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTInsert" var="" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcionInsert" value="#{beanDiagnostico.descripcionInsert}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
 
-                <p:column headerText="Descripcion">
-                    <h:outputText value="#{diagnostico.diagnostico}" />
-                </p:column>
-            </p:dataTable>
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanDiagnostico.estadoInsert}" >
+                                                <f:selectItems value="#{beanDiagnostico.listEstado}" var="estados" itemLabel="#{estados.estado}"  itemValue="#{estados.idEstado}" />
+                                            </h:selectOneMenu>   
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-disk" value="Guardar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDiagnostico.setInsert()}"  onclick="PF('InsertDialog').hidden();" title="Guardar"/>
+                                        </p:column>
 
-        </p:panel>
-         
-                     </ui:define>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formUpdate">
+                        <p:dialog header="Modificar diagnostico" widgetVar="UpdateDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="UpdateDetail" style="text-align:center;">
+                                <h:outputText value="#{beanDiagnostico.selectedTablaUpdate.idDiagnostico} - #{beanDiagnostico.selectedTablaUpdate.diagnostico}" style="display:none"/>
+
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTUpdate" var="rol" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcion" value="#{beanDiagnostico.descripcionUpdate}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
+
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanDiagnostico.estadoUpdate}" >
+                                                <f:selectItems value="#{beanDiagnostico.listEstadoUpdate}" var="estadosUpdate" itemLabel="#{estadosUpdate.estado}"  itemValue="#{estadosUpdate.idEstado}" />
+                                            </h:selectOneMenu>  
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-pencil" value="Modificar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDiagnostico.setUpdate()}"  onclick="PF('UpdateDialog').hidden();" title="Modificar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formDelete">
+                        <p:dialog header="Eliminar diagnostico" widgetVar="DeleteDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="DeleteDetail" style="text-align:center;">
+
+                                <h:panelGrid columns="2" cellpadding="1">
+
+                                    <p:dataTable id="basicDTDelete" var="rol" value="#{beanDiagnostico.selectedTablaDelete}"  paginator="false" rows="2">
+                                        
+                                        <p:column headerText="Descripcion">
+                                            <h:outputText value="#{beanDiagnostico.selectedTablaDelete.diagnostico}" />
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-closethick" value="Eliminar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDiagnostico.setDelete()}"  onclick="PF('DeleteDialog').hidden();" title="Eliminar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <h:outputText value="#{beanDiagnostico.selectedTablaDelete.idDiagnostico} - #{beanDiagnostico.selectedTablaDelete.diagnostico}" style="display:none"/>
+
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+
+                </p:panel>
+            </ui:define>
 
         </ui:composition>
     </h:body>

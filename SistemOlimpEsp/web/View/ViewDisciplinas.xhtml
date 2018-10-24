@@ -16,48 +16,133 @@
         <ui:composition template="Main.xhtml">
 
             <ui:define name="content">
-                <p:growl id="growl" showDetail="true" sticky="true" />
-                <p:panel  header="Disciplinas"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+                
+                <p:growl id="msgs" showDetail="true" />
+                <p:panel  header="Mantenimiento disciplina"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
 
-                    <h:form styleClass="form-horizontal">
+                    <h:form styleClass="form-horizontal" id="formTable">
 
+                        <p:commandButton update=":formInsert:InsertDetail" icon="ui-icon-plus" value="Agregar registro" styleClass="ui-priority-primary" style="float:right;"
+                                         actionListener="#{beanDisciplinas.formClear()}"  onclick="PF('InsertDialog').show();" title="Agregar"/>
 
-                        <h:panelGrid columns="2" cellpadding="1" >
+                        <p:dataTable id="basicDT" var="tabla" value="#{beanDisciplinas.tabla}"  paginator="true" rows="5">
+                            <p:column headerText="Id" >
+                                <h:outputText value="#{tabla.idDisciplina}" />
+                            </p:column>
 
-                            <p:spacer />
-                            <h:outputLabel for="codigo" value=" " />
-                            <p:inputText placeholder="Codigo" id="codigo" value="" required="true" label="codigo" autocomplete="off" styleClass="form-control"/>
-                            <p:spacer />
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{tabla.disciplina}" />
+                            </p:column>
 
-                            <h:outputLabel for="descripcion" value=" " />
-                            <p:inputText placeholder="Descripcion" id="descripcion" value="" required="true" label="descripcion" autocomplete="off" styleClass="form-control"/>
-                            <p:spacer />	<p:spacer />	
-                            <f:facet name="footer">
-                                <p:splitButton id="save" value="Guardar" actionListener="#" ajax="false" icon="ui-icon-disk">
-                                    <p:menuitem id="update"  value="Modificar" actionListener="#"  ajax="false" icon="ui-icon-arrowrefresh-1-w" />
-                                    <p:menuitem id="delete"  value="Eliminar" actionListener="#" ajax="false" icon="ui-icon-close" />
-                                    <p:separator />
-                                </p:splitButton>   
-                            </f:facet> 
-                        </h:panelGrid>
-                        <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{tabla.idEstado.estado}" />
+                            </p:column>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formUpdate:UpdateDetail"  oncomplete="PF('UpdateDialog').show()" icon="ui-icon-pencil" title="Modificar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanDisciplinas.selectedTablaUpdate}" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":formDelete:DeleteDetail"  oncomplete="PF('DeleteDialog').show()"  icon="ui-icon-closethick" title="Eliminar">
+                                    <f:setPropertyActionListener value="#{tabla}" target="#{beanDisciplinas.selectedTablaDelete}" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
 
                     </h:form>
+                    <h:form styleClass="form-horizontal" id="formInsert">
+                        <p:dialog header="Agregar disciplina" widgetVar="InsertDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="InsertDetail" style="text-align:center;">
+                                <h:panelGrid columns="2" cellpadding="1">
 
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTInsert" var="" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Codigo" >
+                                            <p:inputText placeholder="Codigo" id="codigoInsert" value="#{beanDisciplinas.idDisciplinaInsert}" required="true" requiredMessage="El codigo del campo no puede ir vacio!!!" label="Codigo" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
+                                        
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcionInsert" value="#{beanDisciplinas.descripcionInsert}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
 
-                    <p:dataTable var="disciplinas" value="#{beanDisciplinas.disciplinas}"  paginator="false">
-                        <p:column headerText="Id">
-                            <h:outputText value="#{disciplinas.idDisciplina}" />
-                        </p:column>
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanDisciplinas.estadoInsert}" >
+                                                <f:selectItems value="#{beanDisciplinas.listEstado}" var="estados" itemLabel="#{estados.estado}"  itemValue="#{estados.idEstado}" />
+                                            </h:selectOneMenu>   
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-disk" value="Guardar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDisciplinas.setInsert()}"  onclick="PF('InsertDialog').hidden();" title="Guardar"/>
+                                        </p:column>
 
-                        <p:column headerText="Descripcion">
-                            <h:outputText value="#{disciplinas.nombreDisciplina}" />
-                        </p:column>
-                    </p:dataTable>
+                                    </p:dataTable>
+                                </h:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formUpdate">
+                        <p:dialog header="Modificar disciplina" widgetVar="UpdateDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="UpdateDetail" style="text-align:center;">
+                                <h:outputText value="#{beanDisciplinas.selectedTablaUpdate.idDisciplina} - #{beanDisciplinas.selectedTablaUpdate.disciplina}" style="display:none"/>
+
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <p:spacer /><p:spacer />
+                                    <p:dataTable id="basicDTUpdate" var="rol" value=""  paginator="false" rows="2">
+                                        <p:column headerText="Codigo" >
+                                            <h:outputText value="#{beanDisciplinas.idTablaUpdate}" />
+                                        </p:column>
+                                        
+                                        <p:column headerText="Descripcion" >
+                                            <p:inputText placeholder="Descripcion" id="descripcion" value="#{beanDisciplinas.descripcionUpdate}" required="true" requiredMessage="La descripcion del campo no puede ir vacio!!!" label="descripcion" autocomplete="off" styleClass="form-control"/>
+                                        </p:column>
+
+                                        <p:column headerText="Estado">
+                                            <h:selectOneMenu value="#{beanDisciplinas.estadoUpdate}" >
+                                                <f:selectItems value="#{beanDisciplinas.listEstadoUpdate}" var="estadosUpdate" itemLabel="#{estadosUpdate.estado}"  itemValue="#{estadosUpdate.idEstado}" />
+                                            </h:selectOneMenu>  
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-pencil" value="Modificar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDisciplinas.setUpdate()}"  onclick="PF('UpdateDialog').hidden();" title="Modificar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formDelete">
+                        <p:dialog header="Eliminar disciplina" widgetVar="DeleteDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
+                            <p:outputPanel id="DeleteDetail" style="text-align:center;">
+
+                                <h:panelGrid columns="2" cellpadding="1">
+
+                                    <p:dataTable id="basicDTDelete" var="rol" value="#{beanDisciplinas.selectedTablaDelete}"  paginator="false" rows="2">
+                                        <p:column headerText="Codigo" >
+                                            <h:outputText value="#{beanDisciplinas.selectedTablaDelete.idDisciplina}" />
+                                        </p:column>
+                                        <p:column headerText="Descripcion">
+                                            <h:outputText value="#{beanDisciplinas.selectedTablaDelete.disciplina}" />
+                                        </p:column>
+                                        <p:column headerText="">
+                                            <p:commandButton icon="ui-icon-closethick" value="Eliminar" styleClass="ui-priority-primary" style="float:right;"
+                                                             actionListener="#{beanDisciplinas.setDelete()}"  onclick="PF('DeleteDialog').hidden();" title="Eliminar"/>
+                                        </p:column>
+
+                                    </p:dataTable>
+
+                                    <h:outputText value="#{beanDisciplinas.selectedTablaDelete.idDisciplina} - #{beanDisciplinas.selectedTablaDelete.disciplina}" style="display:none"/>
+
+                                </h:panelGrid>
+                                <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
+                            </p:outputPanel>
+                        </p:dialog>
+                    </h:form>
 
                 </p:panel>
-
-
             </ui:define>
 
         </ui:composition>
