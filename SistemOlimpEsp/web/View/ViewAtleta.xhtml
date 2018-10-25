@@ -26,7 +26,7 @@
                                          actionListener="#{beanAtleta.formClear()}"  onclick="PF('InsertDialog').show();" title="Agregar"/>
 
                         <p:dataTable id="basicDT" var="tabla" value="#{beanAtleta.tabla}"  paginator="true" rows="5">
-                            <p:column headerText="Codigo" >
+                            <p:column headerText="Codigo" filterBy="#{tabla.idAtleta}" >
                                 <h:outputText value="#{tabla.idAtleta}" />
                             </p:column>
 
