@@ -10,7 +10,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="css/default.css"/>
         <h:outputStylesheet name="css/cssLayout.css"/>
-        <script src="https://code.jquery.com/jquery-git.js"></script>
         <title>Olimpiadas Especiales</title>
     </h:head>
 
@@ -22,15 +21,13 @@
                     <p:growl id="messages"/>
                     <p:menubar>
                         <p:submenu label="Formularios de Ingreso" icon="ui-icon-pencil">
-                           <p:menuitem value="Tutores" url="#" icon="ui-icon-arrowreturnthick-1-e" />
-                            <p:menuitem value="Atletas" url="#.xhtml" icon="ui-icon-arrowreturnthick-1-e" />
-                            <p:menuitem value="Participantes" url="#" icon="ui-icon-arrowreturnthick-1-e" />
+                            <p:menuitem value="Atletas" url="ViewAtleta.xhtml" icon="ui-icon-arrowreturnthick-1-e" />
                             
                         </p:submenu>
 
                         <p:submenu label="Reporteria"  icon="ui-icon-document">
-                            <p:menuitem value="Por Atletas" url="ViewAtletaReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
-                            <p:menuitem value="Por Disciplinas" url="ViewDisciplinasReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Por Atletas" url="#ViewAtletaReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
+                            <p:menuitem value="Por Disciplinas" url="ViewDisciplinaReport.xhtml" icon="ui-icon-arrowreturnthick-1-w" />
                         
                         </p:submenu>
 
@@ -63,30 +60,27 @@
         </div>
 
         <div id="bottom">
-            
             <ui:insert name="bottom">
                 <p:graphicImage url="../resources/images/logoOSGT.png" style="float: left; height: 75px; width: 75px; margin-left: 150px; margin-right: -150px;"></p:graphicImage>
                 <center>
                     <p:outputLabel value="Derechos Reservados @OE 2018"/> 
                 </center>
-                <div id="rightb" style="position: relative; right: 0; margin-left: 280px;">
+                <div id="rightb" style="position: relative; right: 0">
                     
                     <p:outputLabel value="Usuario: "/><p:outputLabel value="#{sessionScope.userName}"/>
                     <p:graphicImage url="../resources/images/logoUMG.png" style="float: right; height: 75px; width: 75px; margin-right: 150px; "></p:graphicImage>
                 </div>
-                
             </ui:insert>
-            
         </div>
 
     </h:body>
     <style type="text/css">
         .ui-menu, .ui-menu{
-            background:#ffffffcc;
+            background: #ffffcc;
             color: #4f4f4f; 
         }
         .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
-            background:#ffffffcc;
+            background:#ffffcc;
             color: #4f4f4f;
         }
     </style>

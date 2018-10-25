@@ -1,0 +1,235 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>OE</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta http-equiv="X-UA-Conpatible" content="IE=edge" />
+
+    </h:head>
+    <h:body>
+        <ui:composition template="Main.xhtml">
+
+            <ui:define name="content">
+
+                <p:growl id="msgs" showDetail="true" />
+                <p:panel  header="Listado de atletas"  style="height:80%; width: 60%; margin-left: 20%; margin-top: 1%;">
+
+                    <h:form styleClass="form-horizontal" id="formTable">
+
+                        <p:commandButton update=":formInsert:InsertDetail" icon="ui-icon-plus" value="Agregar registro" styleClass="ui-priority-primary" style="float:right;"
+                                         actionListener="#{beanAtleta.formClear()}"  onclick="PF('InsertDialog').show();" title="Agregar"/>
+
+                        <p:dataTable id="basicDT" var="tabla" value="#{beanAtleta.tabla}"  paginator="true" rows="5">
+                            <p:column headerText="Codigo" >
+                                <h:outputText value="#{tabla.idAtleta}" />
+                            </p:column>
+
+                            <p:column headerText="Nombre">
+                                <h:outputText value="#{tabla.nombreAtleta}" />
+                            </p:column>
+
+                            <p:column headerText="DPI">
+                                <h:outputText value="#{tabla.dpi}" />
+                            </p:column>
+
+                            <p:column headerText="FECHA NACIMIENTO">
+                                <h:outputText value="#{tabla.fechaNacimiento}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="TELEFONO">
+                                <h:outputText value="#{tabla.telefono}" />
+                            </p:column>
+
+                            <p:column headerText="Estado">
+                                <h:outputText value="#{tabla.idEstado.estado}" />
+                            </p:column>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton   icon="ui-icon-pencil" title="Modificar">
+                                    <f:setPropertyActionListener value="" target="" />
+                                </p:commandButton>
+                            </p:column>
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton icon="ui-icon-closethick" title="Eliminar">
+                                    <f:setPropertyActionListener value="" target="" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </h:form>
+                    <h:form styleClass="form-horizontal" id="formInsert">
+                        <p:dialog header="Agregar atleta" widgetVar="InsertDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="450">
+                            <h:panelGrid columns="2"  cellpadding="1">
+                                <p:outputLabel for="codigoInsert" value="Codigo" />
+                                <p:inputText placeholder="Codigo" id="codigoInsert" value="#{beanAtleta.codigoInsert}" required="true" requiredMessage="el codigo campo no puede ir vacio!!!" label="codigo" autocomplete="off" styleClass="form-control"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="6"  cellpadding="10">
+                                <p:outputLabel for="institucionInsert"  value="Institucion" />
+                                <h:selectOneMenu id="institucionInsert" value="#{beanAtleta.institucionInsert}" >
+                                    <f:selectItem itemLabel="Seleccione una opcion " itemValue="" />
+                                    <f:selectItems value="#{beanAtleta.listInstitucion}" var="institucion" itemLabel="#{institucion.institucion}"  itemValue="#{institucion.idIntitucion}" />
+                                </h:selectOneMenu> 
+
+                                <p:outputLabel for="estadoInsert"  value="Estado" />
+                                <h:selectOneMenu id="estadoInsert" value="#{beanAtleta.estadoInsert}" >
+                                    <f:selectItems value="#{beanAtleta.listEstado}" var="estados" itemLabel="#{estados.estado}"  itemValue="#{estados.idEstado}" />
+                                </h:selectOneMenu> 
+                            </h:panelGrid>
+                            <p:tabView>
+                                <p:tab title="Datos del atleta">
+                                    <h:panelGrid columns="2"  cellpadding="2">
+                                        <h:panelGrid columns="2"  cellpadding="2">
+                                            <p:outputLabel for="nombreInsert"  value="Nombre" />
+                                            <p:inputText placeholder="Nombre" id="nombreInsert" value="#{beanAtleta.nombreInsert}" required="true" requiredMessage="el nombre campo no puede ir vacio!!!" label="nombre" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="fec_nacInsert" value="Fecha nacimiento" />
+                                            <p:calendar readonly="true" pattern="dd-MM-yyyy" placeholder="Fecha" id="fec_nacInsert" value="#{beanAtleta.fechaNacimientoInsert}" />
+
+                                            <p:outputLabel for="dpiInsert" value="DPI" />
+                                            <p:inputText placeholder="DPI" id="dpiInsert" value="#{beanAtleta.dpiInsert}"  label="dpi" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="telefonoInsert" value="Telefono" />
+                                            <p:inputText placeholder="Telefono" id="telefonoInsert" value="#{beanAtleta.telefonoInsert}"  label="telefono" autocomplete="off" styleClass="form-control"/>
+
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2"  cellpadding="2">
+
+                                            <p:outputLabel for="celularInsert"  value="Celular" />
+                                            <p:inputText placeholder="Celular" id="celularInsert" value="#{beanAtleta.celularInsert}"  label="celular" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="diagnosticoInsert"  value="Diagnostico" />
+                                            <h:selectOneMenu id="diagnosticoInsert" value="#{beanAtleta.diagnosticoInsert}"  styleClass="form-control">
+                                                <f:selectItem itemLabel="Seleccione una opcion " itemValue="" />
+                                                <f:selectItems value="#{beanAtleta.listDiagnostico}" var="diagnostico" itemLabel="#{diagnostico.diagnostico}"  itemValue="#{diagnostico.idDiagnostico}" />
+                                            </h:selectOneMenu> 
+
+                                            <p:outputLabel for="sitioEntrenamientoInsert"  value="Sitio entrenamiento" />
+                                            <h:selectOneMenu id="sitioEntrenamientoInsert" value="#{beanAtleta.sitioEntrenamientoInsert}" styleClass="form-control">
+                                                <f:selectItem itemLabel="Seleccione una opcion " itemValue="" />
+                                                <f:selectItems value="#{beanAtleta.listSitioEntrenamiento}" var="sitio_entre" itemLabel="#{sitio_entre.sitioEntrenamiento}"  itemValue="#{sitio_entre.idSitioEntrenamiento}" />
+                                            </h:selectOneMenu> 
+
+                                            <p:outputLabel for="departamentoInsert"  value="Departamento" />
+                                            <h:selectOneMenu id="departamentoInsert" value="#{beanAtleta.departamentoInsert}"  styleClass="form-control">
+                                                <f:selectItem itemLabel="Seleccione una opcion " itemValue=""/>
+                                                <f:selectItems value="#{beanAtleta.listDepartamento}" var="departamento" itemLabel="#{departamento.departamento}"  itemValue="#{departamento.idDepartamento}" />
+                                            </h:selectOneMenu> 
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="2"  cellpadding="2">
+                                        <h:panelGrid columns="1"  cellpadding="2">
+                                            <p:outputLabel for="direccionInsert"  value="Direccion" />
+                                            <p:inputTextarea rows="3" cols="40" id="direccionInsert" completeMethod="#{beanAtleta.direccionInsert}" queryDelay="750" minQueryLength="4" />
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="1"  cellpadding="2">
+                                            <p:outputLabel for="comentarioInsert"  value="Comentario" />
+                                            <p:inputTextarea rows="3" cols="40" id="comentarioInsert" completeMethod="#{beanAtleta.comentarioInsert}" queryDelay="750" minQueryLength="4" /> 
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+
+                                </p:tab>
+                                <p:tab title="Datos de la madre">
+                                    <h:panelGrid columns="2"  cellpadding="2">
+                                        <h:panelGrid columns="2"  cellpadding="2">
+                                            <p:outputLabel for="nombreMadreInsert"  value="Nombre" />
+                                            <p:inputText placeholder="Nombre" id="nombreMadreInsert" value="#{beanAtleta.nombreMadreInsert}" required="true" requiredMessage="el nombre campo no puede ir vacio!!!" label="nombre" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="fec_nacMadreInsert" value="Fecha nacimiento" />
+                                            <p:calendar readonly="true" pattern="dd-MM-yyyy" placeholder="Fecha" id="fec_nacMadreInsert" value="#{beanAtleta.fechaNacimientoMadreInsert}" />
+
+                                            <p:outputLabel for="dpiMadreInsert" value="DPI" />
+                                            <p:inputText placeholder="DPI" id="dpiMadreInsert" value="#{beanAtleta.dpiMadreInsert}" required="true" requiredMessage="el dpi campo no puede ir vacio!!!" label="dpi" autocomplete="off" styleClass="form-control"/>
+
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2"  cellpadding="2">
+                                            <p:outputLabel for="telefonoMadreInsert" value="Telefono" />
+                                            <p:inputText placeholder="Telefono" id="telefonoMadreInsert" value="#{beanAtleta.telefonoMadreInsert}" required="true" requiredMessage="el telefono campo no puede ir vacio!!!" label="telefono" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="celularMadreInsert"  value="Celular" />
+                                            <p:inputText placeholder="Celular" id="celularMadreInsert" value="#{beanAtleta.celularMadreInsert}" required="true" requiredMessage="el celuar campo no puede ir vacio!!!" label="celular" autocomplete="off" styleClass="form-control"/>
+
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="1"  cellpadding="2">
+                                        <p:outputLabel for="direccionMadreInsert"  value="Direccion" />
+                                        <p:inputTextarea rows="3" cols="80" id="direccionMadreInsert" completeMethod="#{beanAtleta.direccionMadreInsert}" queryDelay="750" minQueryLength="4" />
+                                    </h:panelGrid>
+                                </p:tab>
+                                <p:tab title="Datos de la padre">
+                                    <h:panelGrid columns="2"  cellpadding="2">
+                                        <h:panelGrid columns="2"  cellpadding="2">
+                                            <p:outputLabel for="nombrePadreInsert"  value="Nombre" />
+                                            <p:inputText placeholder="Nombre" id="nombrePadreInsert" value="#{beanAtleta.nombrePadreInsert}" required="true" requiredMessage="el nombre campo no puede ir vacio!!!" label="nombre" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="fec_nacPadreInsert" value="Fecha nacimiento" />
+                                            <p:calendar readonly="true" pattern="dd-MM-yyyy" placeholder="Fecha" id="fec_nacPadreInsert" value="#{beanAtleta.fechaNacimientoPadreInsert}" />
+
+                                            <p:outputLabel for="dpiPadreInsert" value="DPI" />
+                                            <p:inputText placeholder="DPI" id="dpiPadreInsert" value="#{beanAtleta.dpiPadreInsert}" label="dpi" autocomplete="off" styleClass="form-control"/>
+
+                                        </h:panelGrid>
+                                        <h:panelGrid columns="2"  cellpadding="2">
+                                            <p:outputLabel for="telefonoPadreInsert" value="Telefono" />
+                                            <p:inputText placeholder="Telefono" id="telefonoPadreInsert" value="#{beanAtleta.telefonoPadreInsert}" required="true" requiredMessage="el telefono campo no puede ir vacio!!!" label="telefono" autocomplete="off" styleClass="form-control"/>
+
+                                            <p:outputLabel for="celularPadreInsert"  value="Celular" />
+                                            <p:inputText placeholder="Celular" id="celularPadreInsert" value="#{beanAtleta.celularPadreInsert}" required="true" requiredMessage="el celuar campo no puede ir vacio!!!" label="celular" autocomplete="off" styleClass="form-control"/>
+
+                                        </h:panelGrid>
+                                    </h:panelGrid>
+                                    <h:panelGrid columns="1"  cellpadding="2">
+                                        <p:outputLabel for="direccionPadreInsert"  value="Direccion" />
+                                        <p:inputTextarea rows="3" cols="80" id="direccionPadreInsert" completeMethod="#{beanAtleta.direccionPadreInsert}" queryDelay="750" minQueryLength="4" />
+                                    </h:panelGrid>
+                                </p:tab>
+                                <p:tab title="Programa / Disciplina">
+                                    <h:panelGrid columns="6"  cellpadding="10">
+                                        <p:outputLabel for="disciplinaInsert"  value="Disciplina" />
+                                        <h:selectOneMenu id="disciplinaInsert" value="#{beanAtleta.disciplinaInsert}" >
+                                            <f:selectItem itemLabel="Seleccione una opcion " itemValue="" />
+                                            <f:selectItems value="#{beanAtleta.listDisciplinas}" var="disciplina" itemLabel="#{disciplina.disciplina}"  itemValue="#{disciplina.idDisciplina}" />
+                                        </h:selectOneMenu> 
+
+                                        <p:outputLabel for="programaInsert"  value="Programa" />
+                                        <h:selectOneMenu id="programaInsert" value="#{beanAtleta.programaInsert}" >
+                                             <f:selectItem itemLabel="Seleccione una opcion " itemValue="" />
+                                            <f:selectItems value="#{beanAtleta.listProgramas}" var="programa" itemLabel="#{programa.programa}"  itemValue="#{programa.idPrograma}" />
+                                        </h:selectOneMenu> 
+                                    </h:panelGrid>
+                                </p:tab>
+                            </p:tabView>
+                            <p:outputPanel id="InsertDetail" style="text-align:center;">
+
+                                <p:commandButton icon="ui-icon-disk" value="Guardar" styleClass="ui-priority-primary" style="float:right;"
+                                                 actionListener="#{beanRoles.setInsert()}"  onclick="PF('InsertDialog').hidden();" title="Guardar"/>
+                            </p:outputPanel>
+                        </p:dialog>  
+                    </h:form>
+                </p:panel>
+            </ui:define>
+
+        </ui:composition>
+    </h:body>
+
+    <style type="text/css">
+        .ui-priority-primary{
+            background:#2980B9;
+            color: #fff;
+        }
+        .ui-panel-titlebar, ui-button-text ui-c{
+            background:#2980B9;
+            color: #fff;
+        }
+
+    </style>
+</html>
+

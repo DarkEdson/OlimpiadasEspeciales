@@ -27,7 +27,7 @@
 
                         <p:dataTable id="basicDT" var="tabla" value="#{beanInstitucion.tabla}"  paginator="true" rows="5">
                             <p:column headerText="Id" >
-                                <h:outputText value="#{tabla.idIntitucion}" />
+                                <h:outputText value="#{tabla.idInstitucion}" />
                             </p:column>
 
                             <p:column headerText="Descripcion">
@@ -81,7 +81,7 @@
                     <h:form styleClass="form-horizontal" id="formUpdate">
                         <p:dialog header="Modificar institucion" widgetVar="UpdateDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="850" height="350">
                             <p:outputPanel id="UpdateDetail" style="text-align:center;">
-                                <h:outputText value="#{beanInstitucion.selectedTablaUpdate.idIntitucion} - #{beanInstitucion.selectedTablaUpdate.institucion}" style="display:none"/>
+                                <h:outputText value="#{beanInstitucion.selectedTablaUpdate.idInstitucion} - #{beanInstitucion.selectedTablaUpdate.institucion}" style="display:none"/>
 
                                 <h:panelGrid columns="2" cellpadding="1">
                                     <p:spacer /><p:spacer />
@@ -124,7 +124,7 @@
 
                                     </p:dataTable>
 
-                                    <h:outputText value="#{beanInstitucion.selectedTablaDelete.idIntitucion} - #{beanInstitucion.selectedTablaDelete.institucion}" style="display:none"/>
+                                    <h:outputText value="#{beanInstitucion.selectedTablaDelete.idInstitucion} - #{beanInstitucion.selectedTablaDelete.institucion}" style="display:none"/>
 
                                 </h:panelGrid>
                                 <p:spacer /><p:spacer /> <p:spacer /><p:spacer />
